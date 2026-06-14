@@ -395,5 +395,9 @@ export interface ProfileData {
   global_position: number;
   certificates: Certificate[];
   progress: ProfileCourseProgress[];
+  unlocked_items?: string[];
+  streak_freezes?: number;
+  active_frame?: string;
+  active_theme?: string;
 }
 
