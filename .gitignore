@@ -1,0 +1,31 @@
+# Python virtual environment
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Next.js / Node
+node_modules/
+.next/
+out/
+build/
+.yarn/
+*.tsbuildinfo
+
+# Local Environment & Logs
+.env
+.env.local
+*.log
+backend/backend.log
+
+# Databases & Generated files
+*.db
+*.pdf
+eduverse.db
+backend/eduverse.db
+
+# IDEs & System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
