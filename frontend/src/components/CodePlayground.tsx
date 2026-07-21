@@ -197,9 +197,9 @@ export default function CodePlayground({
 
         // --- JAVA SIMULATOR ---
         if (courseId === '7') {
-          let lines = code.split('\n');
-          let cleanLines = lines.map(line => {
-            let trimmed = line.trim();
+          const lines = code.split('\n');
+          const cleanLines = lines.map(line => {
+            const trimmed = line.trim();
             if (trimmed.startsWith('public class') || trimmed.startsWith('class ') || trimmed.startsWith('public static void main') || trimmed === '}') {
               return '';
             }

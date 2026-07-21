@@ -66,14 +66,14 @@ export default function InterviewPage() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [activeSession?.messages, isSending]);
 
-  const loadHistory = async () => {
+  async function loadHistory() {
     try {
       const data = await api.getInterviewHistory();
       setHistory(data);
     } catch (err) {
       console.error("Failed to load interview history:", err);
     }
-  };
+  }
 
   const startInterview = async (role: string) => {
     setIsStarting(true);
