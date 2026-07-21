@@ -23,11 +23,7 @@ export default function ShopPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  useEffect(() => {
-    loadShopData();
-  }, []);
-
-  const loadShopData = async () => {
+  async function loadShopData() {
     setIsLoading(true);
     try {
       // Fetch user stats
@@ -68,7 +64,11 @@ export default function ShopPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }
+
+  useEffect(() => {
+    loadShopData();
+  }, []);
 
   const handleBuy = async (itemId: string) => {
     setIsProcessing(itemId);
@@ -265,10 +265,26 @@ export default function ShopPage() {
                         <div className="flex items-center justify-center py-1">
                           <div className={`w-full h-8 rounded border flex items-center justify-center text-[9px] font-bold tracking-wider ${
                             item.id === 'theme_cyberpunk' ? 'bg-slate-950 border-cyan-500/30 text-cyan-400 shadow-[inset_0_0_5px_#06b6d4]' :
-                            item.id === 'theme_matrix' ? 'bg-black border-green-500/30 text-green-500 shadow-[inset_0_0_5px_#22c55e]' :
+                            item.id === 'theme_matrix'    ? 'bg-black border-green-500/30 text-green-500 shadow-[inset_0_0_5px_#22c55e]' :
+                            item.id === 'theme_aurora'    ? 'border-violet-500/40 text-violet-300 overflow-hidden relative' :
                             'bg-slate-900 border-slate-800 text-slate-400'
-                          }`}>
-                            {item.id === 'theme_cyberpunk' ? 'CYBERPUNK sunset' : 'MATRIX rain'}
+                          }`}
+                            style={item.id === 'theme_aurora' ? {
+                              background: 'linear-gradient(135deg, #1e0a3c 0%, #0a1628 30%, #051a16 70%, #2d0a2e 100%)',
+                              boxShadow: 'inset 0 0 12px rgba(139,92,246,0.4), inset 0 0 4px rgba(20,184,166,0.3)'
+                            } : {}}
+                          >
+                            {item.id === 'theme_cyberpunk' ? 'CYBERPUNK sunset' :
+                             item.id === 'theme_matrix'    ? 'MATRIX rain' :
+                             item.id === 'theme_aurora'    ? (
+                               <span style={{
+                                 background: 'linear-gradient(90deg,#c4b5fd,#93c5fd,#5eead4,#f9a8d4)',
+                                 WebkitBackgroundClip: 'text',
+                                 WebkitTextFillColor: 'transparent',
+                                 fontWeight: 800,
+                                 letterSpacing: '0.15em'
+                               }}>✦ AURORA GALAXY ✦</span>
+                             ) : item.name}
                           </div>
                         </div>
                       )}

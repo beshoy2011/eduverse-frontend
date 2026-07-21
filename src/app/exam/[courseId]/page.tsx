@@ -234,7 +234,7 @@ export default function ExamPage() {
     }));
   };
 
-  const handleSubmit = async () => {
+  async function handleSubmit() {
     if (!exam || submitting) return;
     setSubmitting(true);
 
@@ -260,7 +260,7 @@ export default function ExamPage() {
     } finally {
       setSubmitting(false);
     }
-  };
+  }
 
   const formatTime = (seconds: number) => {
     const min = Math.floor(seconds / 60);
