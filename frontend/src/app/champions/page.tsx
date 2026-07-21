@@ -280,7 +280,18 @@ export default function Champions() {
                 <div className="flex flex-col items-center">
                   <span className="text-2xl font-black text-white">{timeLeft.minutes}</span>
                   <span className="text-[8px] font-bold text-slate-400 uppercase tracking-wider">{currentT.minutes}</span>
-                </d        {/* --- MAIN GRID AREA: Left (Quests & Leaderboard) + Right (Coder Lounge) --- */}
+                </div>
+                <span className="text-xl font-bold text-slate-600">:</span>
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl font-black text-white">{timeLeft.seconds}</span>
+                  <span className="text-[8px] font-bold text-slate-400 uppercase tracking-wider">{currentT.seconds}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* --- MAIN GRID AREA: Left (Quests & Leaderboard) + Right (Coder Lounge) --- */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           
           {/* Left Columns (col-span 2) */}
@@ -560,20 +571,6 @@ export default function Champions() {
             </div>
           </div>
         </div>
-      </main>                      'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200/50 dark:border-slate-700/50'
-                          }`}>
-                            {item.rank_title}
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
       </main>
 
       <DonationWidget />

@@ -7,25 +7,33 @@ from database import engine, Base
 from routes import auth, courses, lessons, progress, chat, exams, certificates, leaderboard, challenges, profile, ai_review, interview, shop, quests, lounge
 
 # Create all tables on startup if they don't exist yet
-# (Good for quick startup when seed hasn't been run)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="EduVerse API",
     description="Backend services for EduVerse AI-Powered Education Platform",
-    version="1.0.0"
+    version="1.0.0",
+    # FIX: Prevent Swagger UI from constructing /docs/api/* relative URLs.
+    # Without this, visiting /docs causes Swagger to call /docs/api/... instead of /api/...
+    root_path_in_servers=False,
+    # Explicit server root so Swagger always resolves requests from "/" not "/docs"
+    servers=[
+        {"url": "/", "description": "EduVerse API"},
+    ],
+    docs_url="/docs",
+    redoc_url="/redoc",
 )
 
 # CORS configurations for Next.js frontend
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "https://eduverse.vercel.app",  # Production URL
+    "https://eduverse.vercel.app",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all for development flexibility, change in production if needed
+    allow_origins=["*"],  # Allow all for development; restrict in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -58,6 +66,5 @@ def read_root():
 
 if __name__ == "__main__":
     import uvicorn
-    # Read port from environment or default to 8000
     port = int(os.getenv("PORT", "8000"))
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)

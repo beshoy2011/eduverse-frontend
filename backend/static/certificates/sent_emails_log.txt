@@ -55,3 +55,22 @@ CEO, EduVerse Team
 
 =========================================
 
+=== EMAIL LOG (2026-06-15T19:36:27.220064) ===
+To: luxebrush@gmail.com
+Subject: Congratulations on completing Java Basics! - EduVerse
+Attachment: C:\Users\besho\OneDrive\Desktop\html\edu verse 2\backend\static\certificates\e35ccb99-e039-4286-93b2-f992438a3cb0.pdf
+Body:
+Dear beshoy 2011,
+
+Congratulations! You have successfully completed the course "Java Basics" on EduVerse.
+
+We are thrilled to present you with your official Certificate of Completion, attached to this email. You can also view and download it directly from your dashboard on the EduVerse platform.
+
+Keep up the fantastic work and continue your learning journey!
+
+Best regards,
+Beshoy Simon
+CEO, EduVerse Team
+
+=========================================
+

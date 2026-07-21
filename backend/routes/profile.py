@@ -86,7 +86,11 @@ def get_user_profile(user_id: int, db: Session = Depends(get_db)):
         achievements=user.achievements or [],
         global_position=global_pos,
         certificates=certs_out,
-        progress=prog_list
+        progress=prog_list,
+        unlocked_items=user.unlocked_items or [],
+        streak_freezes=user.streak_freezes or 0,
+        active_frame=user.active_frame or "default",
+        active_theme=user.active_theme or "default"
     )
 
 @router.post("/update-avatar")

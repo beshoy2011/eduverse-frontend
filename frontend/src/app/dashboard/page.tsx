@@ -296,7 +296,12 @@ export default function Dashboard() {
   const t = dashboardTranslations[lang];
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+    <div className={`flex flex-col min-h-screen transition-colors duration-300 ${
+      user?.active_theme === 'theme_cyberpunk' ? 'theme-cyberpunk' :
+      user?.active_theme === 'theme_matrix' ? 'theme-matrix' :
+      user?.active_theme === 'theme_cosmic' ? 'theme-cosmic' :
+      'bg-slate-50 dark:bg-slate-950'
+    }`}>
       <Navbar />
 
       <main className="flex-1 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 w-full space-y-10">

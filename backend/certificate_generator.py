@@ -1,10 +1,14 @@
 import os
+from dotenv import load_dotenv
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 from reportlab.graphics.shapes import Drawing, Rect
 from reportlab.graphics.barcode.qr import QrCodeWidget
 from reportlab.graphics import renderPDF
+
+load_dotenv()
+
 
 def draw_real_qr(canv, x, y, data_url, size=60):
     d = Drawing(size, size)

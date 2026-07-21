@@ -41,6 +41,7 @@ export default function Navbar() {
   const [lang, setLang] = useState<'en' | 'ar'>('en');
   const [userXp, setUserXp] = useState<number>(0);
   const [userLevel, setUserLevel] = useState<number>(1);
+  const [userFrame, setUserFrame] = useState<string>('default');
 
   useEffect(() => {
     // Check auth status
@@ -55,6 +56,7 @@ export default function Navbar() {
         setUserName(u.name);
         setUserXp(u.xp);
         setUserLevel(u.level);
+        setUserFrame(u.active_frame || 'default');
         localStorage.setItem('eduverse_user_name', u.name);
       }).catch(err => {
         console.error("Failed to sync navbar user stats", err);
@@ -207,7 +209,12 @@ export default function Navbar() {
             {userName ? (
               <div className="flex items-center gap-4">
                 <Link href="/profile/me" className="flex items-center gap-2 rounded-full bg-slate-50 dark:bg-slate-900 py-1 px-3 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:border-indigo-500/35 dark:hover:border-indigo-400/35 hover:scale-[1.02] transition-all duration-300">
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-500 text-white text-xs font-black shadow-sm">
+                  <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-white text-xs font-black shadow-sm ${
+                    userFrame === 'frame_neon' ? 'border border-pink-500 shadow-[0_0_5px_#ec4899] bg-gradient-to-tr from-indigo-600 to-violet-500' :
+                    userFrame === 'frame_rainbow' ? 'border border-transparent bg-gradient-to-r from-red-500 via-green-500 to-blue-500 text-yellow-300' :
+                    userFrame === 'frame_gold' ? 'border border-yellow-500 shadow-[0_0_8px_#f59e0b] bg-gradient-to-tr from-amber-500 to-yellow-600 text-amber-100' :
+                    'bg-gradient-to-tr from-indigo-600 to-violet-500'
+                  }`}>
                     {userName[0].toUpperCase()}
                   </div>
                   <div className="flex flex-col text-left">

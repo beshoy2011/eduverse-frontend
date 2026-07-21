@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import flag_modified
+from database import get_db
 import models
 import schemas
 import auth
@@ -55,6 +56,14 @@ SHOP_ITEMS = [
         "category": "theme",
         "description": "Applies a falling matrix green code rain overlay to your dashboard.",
         "style_class": "bg-black border-green-500/30 text-green-500"
+    },
+    {
+        "id": "theme_aurora",
+        "name": "Aurora Galaxy Theme ✨",
+        "cost": 2500,
+        "category": "theme",
+        "description": "Ultra-premium animated aurora borealis with shifting nebula colors, twinkling stars, glassmorphic cards, and shimmer text effects. The most exclusive theme on EduVerse.",
+        "style_class": "bg-gradient-to-br from-violet-950 via-slate-950 to-teal-950 border-violet-500/40 text-violet-300"
     }
 ]
 
