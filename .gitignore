@@ -1,22 +1,44 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
 # Python virtual environment
 venv/
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Next.js / Node
+# dependencies
 node_modules/
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# Next.js / Node / production
 .next/
+/.next/
 out/
+/out/
 build/
+/build
 .yarn/
-*.tsbuildinfo
 
 # Local Environment & Logs
 .env
+.env*
 .env.local
 *.log
 backend/backend.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
 
 # Databases & Generated files
 *.db
@@ -29,3 +51,11 @@ backend/eduverse.db
 .idea/
 .DS_Store
 Thumbs.db
+
+# Vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+*.pem
