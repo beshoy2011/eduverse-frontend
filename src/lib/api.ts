@@ -1,19 +1,18 @@
 /**
  * EduVerse — Centralized API Client
- */
-const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
- *
- * For local development the Next.js rewrite forwards to http://localhost:8000.
- * For production set BACKEND_URL in your deployment environment variables.
+ * ------------------------------------
+ * ALL API requests go through `fetchAPI()`.
+ * API_URL is intentionally empty so every request uses the same origin as the
+ * frontend (e.g. https://yourdomain.com/api/...). Next.js rewrites (next.config.ts)
+ * then proxy /api/* to the FastAPI backend transparently.
  */
 
 // Empty string = same origin. Never hardcode localhost here — that breaks production.
-const API_URL = '';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Interfaces
 // ─────────────────────────────────────────────────────────────────────────────
->>>>>>> 87f5d27206cc4f92934ff7a322876040915c23f9
 
 export interface User {
   id: number;
