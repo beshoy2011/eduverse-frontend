@@ -23,11 +23,7 @@ export default function ShopPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  useEffect(() => {
-    loadShopData();
-  }, []);
-
-  const loadShopData = async () => {
+  async function loadShopData() {
     setIsLoading(true);
     try {
       // Fetch user stats
@@ -68,7 +64,11 @@ export default function ShopPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }
+
+  useEffect(() => {
+    loadShopData();
+  }, []);
 
   const handleBuy = async (itemId: string) => {
     setIsProcessing(itemId);
