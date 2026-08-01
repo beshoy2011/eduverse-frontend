@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { BookOpen, LogOut, Moon, Sun, User, Menu, X, Award, LayoutDashboard, Trophy } from 'lucide-react';
+import { BookOpen, LogOut, Moon, Sun, User, Menu, X, Award, LayoutDashboard, Trophy, Zap } from 'lucide-react';
 import { api } from '@/lib/api';
 
 const navbarTranslations = {
@@ -155,6 +155,14 @@ export default function Navbar() {
               )}
             </Link>
             
+            <Link 
+              href="/replit-challenge"
+              className="relative py-1 px-3 rounded-full bg-gradient-to-r from-cyan-500/20 via-indigo-500/20 to-purple-500/20 text-cyan-400 border border-cyan-500/40 text-xs font-extrabold flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,229,255,0.25)] hover:scale-105 transition-all duration-200"
+            >
+              <Zap className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
+              <span>⚡ Replit Challenge</span>
+            </Link>
+
             {userName ? (
               <>
                 <Link 
