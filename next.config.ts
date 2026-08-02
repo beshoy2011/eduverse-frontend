@@ -8,12 +8,7 @@ const BACKEND_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   "https://eduverse-backend-production.up.railway.app";
 
-import path from "path";
-
 const nextConfig: NextConfig = {
-  turbopack: {
-    root: path.resolve(__dirname),
-  },
   /**
    * Proxy all /api/* requests to the FastAPI backend.
    * This means:

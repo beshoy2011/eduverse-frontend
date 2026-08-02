@@ -5,10 +5,18 @@
  * API_URL is intentionally empty so every request uses the same origin as the
  * frontend (e.g. https://yourdomain.com/api/...). Next.js rewrites (next.config.ts)
  * then proxy /api/* to the FastAPI backend transparently.
+ *
+ * This ensures correct routing from ANY page route:
+ *   /        → /api/courses  ✅
+ *   /login   → /api/auth/login  ✅
+ *   /docs    → /api/...  ✅  (never /docs/api/...)
+ *
+ * For local development the Next.js rewrite forwards to http://localhost:8000.
+ * For production set BACKEND_URL in your deployment environment variables.
  */
 
 // Empty string = same origin. Never hardcode localhost here — that breaks production.
-const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
+const API_URL = '';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Interfaces
