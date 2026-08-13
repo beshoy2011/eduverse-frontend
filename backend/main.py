@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
 
 # Import routers
-from routes import auth, courses, lessons, progress, chat, exams, certificates, leaderboard, challenges, profile, ai_review, interview, shop, quests, lounge
+from routes import auth, courses, lessons, progress, chat, exams, certificates, leaderboard, challenges, profile, ai_review, interview, shop, quests, lounge, analytics, planner
 
 # Create all tables on startup if they don't exist yet
 Base.metadata.create_all(bind=engine)
@@ -55,6 +55,8 @@ app.include_router(interview.router)
 app.include_router(shop.router)
 app.include_router(quests.router)
 app.include_router(lounge.router)
+app.include_router(analytics.router)
+app.include_router(planner.router)
 
 @app.get("/")
 def read_root():

@@ -1,0 +1,42 @@
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/main.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/models.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/routes/certificates.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/schemas.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/app/certificates/[certId]/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/app/champions/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/app/courses/[courseId]/lessons/[lessonId]/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/app/dashboard/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/app/globals.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/app/login/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/app/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/app/register/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/app/shop/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/components/ChatPanel.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/components/CodePlayground.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/components/Navbar.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/lib/api.ts', LF will be replaced by CRLF the next time Git touches it
+ README.md                                          |  107 [32m+[m[31m-[m
+ backend/main.py                                    |    4 [32m+[m[31m-[m
+ backend/models.py                                  |   45 [32m+[m[31m-[m
+ backend/routes/certificates.py                     |  198 [32m++[m[31m-[m
+ backend/schemas.py                                 |  114 [32m+[m[31m-[m
+ frontend/README.md                                 |   44 [32m+[m[31m-[m
+ frontend/next.config.ts                            |    3 [32m+[m
+ frontend/src/app/certificates/[certId]/page.tsx    |  128 [32m+[m[31m-[m
+ frontend/src/app/champions/page.tsx                |  577 [32m+++[m[31m----[m
+ .../courses/[courseId]/lessons/[lessonId]/page.tsx |  435 [32m++[m[31m---[m
+ frontend/src/app/dashboard/page.tsx                |  914 [32m++++[m[31m-------[m
+ frontend/src/app/globals.css                       |  849 [32m++++[m[31m------[m
+ frontend/src/app/layout.tsx                        |   12 [32m+[m[31m-[m
+ frontend/src/app/login/page.tsx                    |  367 [32m++[m[31m---[m
+ frontend/src/app/page.tsx                          | 1712 [32m+++++[m[31m---------------[m
+ frontend/src/app/register/page.tsx                 |  374 [32m++[m[31m---[m
+ frontend/src/app/shop/page.tsx                     |  203 [32m+[m[31m--[m
+ frontend/src/components/ChatPanel.tsx              |  310 [32m++[m[31m--[m
+ frontend/src/components/CodePlayground.tsx         |  756 [32m++++[m[31m-----[m
+ frontend/src/components/Navbar.tsx                 |  501 [32m+++[m[31m---[m
+ frontend/src/lib/api.ts                            |  198 [32m++[m[31m-[m
+ next.config.ts                                     |    3 [32m+[m
+ 22 files changed, 2913 insertions(+), 4941 deletions(-)

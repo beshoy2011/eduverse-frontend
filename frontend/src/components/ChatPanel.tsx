@@ -1,38 +1,37 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Bot, User, Sparkles, HelpCircle, Lightbulb, RefreshCw } from 'lucide-react';
+import { Send, Terminal, Cpu } from 'lucide-react';
 import { api, ChatMessage } from '@/lib/api';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const chatTranslations = {
   en: {
-    welcome: "Hello! I am your EduVerse AI Tutor. I can help explain this lesson, give hints on the coding practice, or create a quiz. What would you like to do?",
-    error: "Error speaking to tutor:",
-    thinking: "Tutor is thinking",
-    placeholder: "Ask your tutor a question...",
-    headerTitle: "AI Personal Tutor",
-    headerSub: "Available 24/7 • Custom Mentoring",
+    welcome: "SYS: EduVerse Diagnostic Copilot online. Ready to analyze syntax, runtime traces, or lesson concepts.",
+    error: "Diagnostic connection error:",
+    thinking: "Analyzing AST & stack trace",
+    placeholder: "Type a diagnostic prompt or query...",
+    headerTitle: "Context Diagnostic Copilot",
+    headerSub: "Lesson Context Analyzer",
     explainBtn: "Explain Concept",
-    hintBtn: "Get Hint",
+    hintBtn: "Get Debug Hint",
     quizBtn: "Quiz Me",
-    explainPrompt: "Could you explain the core concepts of this lesson in simple terms with an analogy?",
-    hintPrompt: "I'm working on the coding practice. Could you give me a small hint without giving away the exact solution?",
-    quizPrompt: "Test my understanding! Can you ask me a quick single multiple-choice question about this lesson?"
+    explainPrompt: "Could you explain the core concepts of this lesson with a concrete developer analogy?",
+    hintPrompt: "I'm working on the coding practice. Could you give me a small debugging hint without giving away the solution?",
+    quizPrompt: "Test my understanding! Ask me a quick multiple-choice question about this lesson."
   },
   ar: {
-    welcome: "مرحباً! أنا معلمك الشخصي الذكي في EduVerse. يمكنني مساعدتك في شرح هذا الدرس، أو إعطائك تلميحات للتطبيقات البرمجية، أو إنشاء اختبار قصير. ماذا ترغب في أن نفعل؟",
-    error: "خطأ في الاتصال بالمعلم الذكي:",
-    thinking: "المعلم يفكر",
-    placeholder: "اسأل معلمك الذكي سؤالاً...",
-    headerTitle: "المعلم الشخصي الذكي",
-    headerSub: "متاح 24/7 • توجيه مخصص",
+    welcome: "النظام: موجه التشخيص البرمجي يعمل الآن. جاهز لتحليل الأكواد وتتبع الأخطاء وشرح المفاهيم.",
+    error: "خطأ في الاتصال بموجه التشخيص:",
+    thinking: "جاري تحليل الكود والمسار البرمجي",
+    placeholder: "اكتب استفسارك البرمجي هنا...",
+    headerTitle: "موجه التشخيص البرمجي",
+    headerSub: "محلل سياق الدرس البرمجي",
     explainBtn: "شرح المفهوم",
-    hintBtn: "الحصول على تلميحة",
+    hintBtn: "تلميحة برمجية",
     quizBtn: "اختبرني",
-    explainPrompt: "هل يمكنك شرح المفاهيم الأساسية لهذا الدرس بتبسيط رائع وتشبيه من الواقع؟",
-    hintPrompt: "أنا أعمل على التطبيق العملي. هل يمكنك إعطائي تلميحة صغيرة دون إعطائي الحل الكامل مباشرة؟",
-    quizPrompt: "اختبر فهمي! هل يمكنك سؤالي سؤالاً سريعاً اختيارياً (multiple-choice) حول هذا الدرس؟"
+    explainPrompt: "هل يمكنك شرح المفاهيم الأساسية لهذا الدرس بتبسيط عملي وتشبيه واقعي؟",
+    hintPrompt: "أنا أعمل على التطبيق العملي. هل يمكنك إعطائي تلميحة صغيرة دون إعطائي الحل الكامل؟",
+    quizPrompt: "اختبر فهمي! هل يمكنك سؤالي سؤالاً اختيارياً سريعاً حول هذا الدرس؟"
   }
 };
 
@@ -47,7 +46,6 @@ export default function ChatPanel({ lessonId }: ChatPanelProps) {
   const [lang, setLang] = useState<'en' | 'ar'>('en');
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // Sync language with local storage and global toggle events
   useEffect(() => {
     const savedLang = localStorage.getItem('eduverse_lang') as 'en' | 'ar' | null;
     const currentLang = savedLang || 'en';
@@ -67,12 +65,9 @@ export default function ChatPanel({ lessonId }: ChatPanelProps) {
     };
 
     window.addEventListener('eduverse_language_change', handleLanguageChange);
-    return () => {
-      window.removeEventListener('eduverse_language_change', handleLanguageChange);
-    };
+    return () => window.removeEventListener('eduverse_language_change', handleLanguageChange);
   }, []);
 
-  // Load chat history on mount/lesson change
   useEffect(() => {
     async function loadHistory() {
       try {
@@ -80,7 +75,6 @@ export default function ChatPanel({ lessonId }: ChatPanelProps) {
         if (history.length === 0) {
           const savedLang = localStorage.getItem('eduverse_lang') as 'en' | 'ar' | null;
           const currentLang = savedLang || 'en';
-          // Add default welcome message
           setMessages([
             {
               role: 'assistant',
@@ -97,7 +91,6 @@ export default function ChatPanel({ lessonId }: ChatPanelProps) {
     loadHistory();
   }, [lessonId]);
 
-  // Scroll to bottom when messages list updates
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
@@ -105,217 +98,158 @@ export default function ChatPanel({ lessonId }: ChatPanelProps) {
   const handleSend = async (textToSend: string) => {
     if (!textToSend.trim() || loading) return;
 
-    const userMessage: ChatMessage = { role: 'user', content: textToSend };
-    setMessages(prev => [...prev, userMessage]);
+    const userMsg: ChatMessage = { role: 'user', content: textToSend };
+    setMessages((prev) => [...prev, userMsg]);
     setInput('');
     setLoading(true);
 
     try {
-      // Send message to API along with current history
       const response = await api.sendChatMessage(textToSend, lessonId, messages);
-      setMessages(prev => [...prev, { role: 'assistant', content: response.reply }]);
+      const assistantMsg: ChatMessage = {
+        role: 'assistant',
+        content: response.reply,
+      };
+      setMessages((prev) => [...prev, assistantMsg]);
     } catch (err: any) {
-      setMessages(prev => [
+      setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: `${chatTranslations[lang].error} ${err.message || 'Server offline'}.` }
+        {
+          role: 'assistant',
+          content: `${chatTranslations[lang].error} ${err.message || 'Connection timeout.'}`,
+        },
       ]);
     } finally {
       setLoading(false);
     }
   };
 
-  const triggerPreset = (preset: string) => {
-    const t = chatTranslations[lang];
-    let prompt = '';
-    if (preset === 'explain') {
-      prompt = t.explainPrompt;
-    } else if (preset === 'hint') {
-      prompt = t.hintPrompt;
-    } else if (preset === 'quiz') {
-      prompt = t.quizPrompt;
-    }
-    handleSend(prompt);
-  };
-
-  // Helper to render message content with basic Markdown formatting
-  const renderMessageContent = (content: string) => {
-    // Basic regex parsers for formatting
-    const parts = content.split(/(```[a-z]*\n[\s\S]*?\n```|`[^`]+`|\*\*[^*]+\*\*)/g);
-
+  const renderFormattedText = (text: string) => {
+    const parts = text.split(/(```[\s\S]*?```|`[^`]+`|\*\*[^*]+\*\*)/g);
     return parts.map((part, index) => {
-      // Code Blocks
-      if (part.startsWith('```')) {
-        const lines = part.split('\n');
-        const code = lines.slice(1, -1).join('\n');
-        const langCode = part.match(/```([a-z]*)/)?.[1] || 'code';
+      if (part.startsWith('```') && part.endsWith('```')) {
+        const code = part.slice(3, -3).replace(/^[a-z]+\n/, '');
         return (
-          <div key={index} className="my-3 overflow-hidden rounded-lg border border-slate-700 bg-slate-900 shadow-md text-left">
-            <div className="flex items-center justify-between bg-slate-800 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              <span>{langCode}</span>
-            </div>
-            <pre className="overflow-x-auto p-3 text-xs font-mono text-slate-100 leading-relaxed">
-              <code>{code}</code>
-            </pre>
-          </div>
+          <pre key={index} className="bg-[#07090e] border border-[#1e2638] text-cyan-300 p-2 rounded text-[11px] font-mono-code my-1 overflow-x-auto">
+            <code>{code}</code>
+          </pre>
         );
       }
-      
-      // Inline Code
       if (part.startsWith('`') && part.endsWith('`')) {
         return (
-          <code key={index} className="rounded bg-slate-200/80 dark:bg-slate-800 px-1 py-0.5 font-mono text-xs font-semibold text-indigo-650 dark:text-indigo-400">
+          <code key={index} className="bg-[#07090e] text-indigo-300 px-1 py-0.5 rounded text-[10px] font-mono-code border border-[#1e2638]">
             {part.slice(1, -1)}
           </code>
         );
       }
-
-      // Bold Text
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={index} className="font-bold text-slate-900 dark:text-white">{part.slice(2, -2)}</strong>;
+        return <strong key={index} className="text-white font-bold">{part.slice(2, -2)}</strong>;
       }
-
-      return <span key={index} className="whitespace-pre-line leading-relaxed">{part}</span>;
+      return <span key={index}>{part}</span>;
     });
   };
 
   const t = chatTranslations[lang];
 
   return (
-    <div className="flex h-full flex-col bg-slate-50 dark:bg-slate-950 border-l border-slate-200/50 dark:border-slate-900 transition-colors duration-300">
-      {/* Header */}
-      <div className={`flex items-center gap-2 border-b border-slate-200/60 dark:border-slate-900 px-4 py-3.5 bg-white/70 dark:bg-slate-900/60 backdrop-blur ${
-        lang === 'ar' ? 'flex-row-reverse text-right' : 'text-left'
-      }`}>
-        <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-500 shadow-inner">
-          <Bot className="h-5 w-5" />
-          <span className="absolute right-0 bottom-0 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900"></span>
+    <div className="flex flex-col h-full bg-[#0d111a] border-l border-[#1e2638] font-sans select-none">
+      
+      {/* Copilot Header */}
+      <div className="p-3 border-b border-[#1e2638] bg-[#07090e] flex items-center justify-between font-mono-code">
+        <div className="flex items-center gap-2">
+          <div className="h-6 w-6 rounded bg-indigo-600/15 border border-indigo-500/30 text-indigo-400 flex items-center justify-center">
+            <Terminal className="h-3.5 w-3.5" />
+          </div>
+          <div>
+            <span className="text-xs font-bold text-white block">{t.headerTitle}</span>
+            <span className="text-[10px] text-slate-500">{t.headerSub}</span>
+          </div>
         </div>
-        <div>
-          <h3 className={`text-xs font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-1 ${
-            lang === 'ar' ? 'justify-end' : ''
-          }`}>
-            {lang === 'en' && <Sparkles className="h-3 w-3 text-amber-500 animate-pulse" />}
-            {t.headerTitle}
-            {lang === 'ar' && <Sparkles className="h-3 w-3 text-amber-500 animate-pulse" />}
-          </h3>
-          <p className="text-[10px] font-bold text-slate-455 dark:text-slate-400">{t.headerSub}</p>
-        </div>
+
+        <span className="edu-badge edu-badge-indigo text-[9px]">ACTIVE CONTEXT</span>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        <AnimatePresence initial={false}>
-          {messages.map((msg, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2 }}
-              className={`flex gap-2.5 ${msg.role === 'user' ? 'justify-end' : 'justify-start'} ${
-                lang === 'ar' ? 'flex-row-reverse' : ''
-              }`}
-            >
-              {msg.role !== 'user' && (
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-white shadow-md">
-                  <Bot className="h-4 w-4" />
-                </div>
-              )}
-              
-              <div
-                className={`max-w-[82%] rounded-2xl px-3.5 py-2.5 text-xs shadow-sm leading-relaxed ${
-                  msg.role === 'user'
-                    ? 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white rounded-br-none shadow-md font-medium'
-                    : 'bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-slate-800/80 rounded-bl-none shadow-sm'
-                } ${lang === 'ar' ? 'text-right' : 'text-left'}`}
-              >
-                {renderMessageContent(msg.content)}
-              </div>
-
-              {msg.role === 'user' && (
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 shadow-sm">
-                  <User className="h-4 w-4" />
-                </div>
-              )}
-            </motion.div>
-          ))}
-          
-          {loading && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className={`flex gap-2.5 justify-start ${lang === 'ar' ? 'flex-row-reverse' : ''}`}
-            >
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-white shadow-sm animate-spin">
-                <RefreshCw className="h-4 w-4" />
-              </div>
-              <div className="max-w-[80%] rounded-2xl px-3.5 py-2.5 text-xs bg-white dark:bg-slate-900 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-800/60 rounded-bl-none flex items-center gap-2">
-                <span>{t.thinking}</span>
-                <span className="flex gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-slate-400 dark:bg-slate-600 animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                  <span className="h-1.5 w-1.5 rounded-full bg-slate-400 dark:bg-slate-600 animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                  <span className="h-1.5 w-1.5 rounded-full bg-slate-400 dark:bg-slate-600 animate-bounce" style={{ animationDelay: '300ms' }}></span>
-                </span>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <div ref={chatEndRef} />
-      </div>
-
-      {/* Preset Prompt Actions */}
-      <div className={`px-4 py-2.5 border-t border-slate-200/60 dark:border-slate-900 bg-white/50 dark:bg-slate-900/50 flex gap-2 overflow-x-auto scrollbar-none shrink-0 ${
-        lang === 'ar' ? 'flex-row-reverse' : ''
-      }`}>
+      {/* Suggested Fast Prompts */}
+      <div className="p-2 bg-[#090d14] border-b border-[#1e2638] flex flex-wrap gap-1.5 font-mono-code text-[10px]">
         <button
-          onClick={() => triggerPreset('explain')}
-          className="flex items-center gap-1.5 shrink-0 rounded-full border border-slate-200 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-900/30 px-3 py-1.5 text-xs font-bold text-slate-650 dark:text-slate-400 hover:border-indigo-500 dark:hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-all hover:scale-102 cursor-pointer"
+          onClick={() => handleSend(t.explainPrompt)}
+          disabled={loading}
+          className="edu-btn edu-btn-secondary py-0.5 px-2 text-[10px]"
         >
-          <HelpCircle className="h-3 w-3" />
           {t.explainBtn}
         </button>
         <button
-          onClick={() => triggerPreset('hint')}
-          className="flex items-center gap-1.5 shrink-0 rounded-full border border-slate-200 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-900/30 px-3 py-1.5 text-xs font-bold text-slate-650 dark:text-slate-400 hover:border-indigo-500 dark:hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-all hover:scale-102 cursor-pointer"
+          onClick={() => handleSend(t.hintPrompt)}
+          disabled={loading}
+          className="edu-btn edu-btn-secondary py-0.5 px-2 text-[10px]"
         >
-          <Lightbulb className="h-3 w-3 text-amber-500" />
           {t.hintBtn}
         </button>
         <button
-          onClick={() => triggerPreset('quiz')}
-          className="flex items-center gap-1.5 shrink-0 rounded-full border border-slate-200 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-900/30 px-3 py-1.5 text-xs font-bold text-slate-650 dark:text-slate-400 hover:border-indigo-500 dark:hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-all hover:scale-102 cursor-pointer"
+          onClick={() => handleSend(t.quizPrompt)}
+          disabled={loading}
+          className="edu-btn edu-btn-secondary py-0.5 px-2 text-[10px]"
         >
-          <Sparkles className="h-3 w-3 text-indigo-500" />
           {t.quizBtn}
         </button>
       </div>
 
-      {/* Input Form */}
+      {/* Message Flow */}
+      <div className="flex-1 p-3 overflow-y-auto space-y-3 font-sans text-xs">
+        {messages.map((msg, i) => {
+          const isAssistant = msg.role === 'assistant';
+          return (
+            <div
+              key={i}
+              className={`flex flex-col ${isAssistant ? 'items-start' : 'items-end'}`}
+            >
+              <div
+                className={`max-w-[90%] rounded-md p-3 leading-relaxed text-xs ${
+                  isAssistant
+                    ? 'bg-[#07090e] border border-[#1e2638] text-slate-200'
+                    : 'bg-indigo-600 text-white font-medium'
+                }`}
+              >
+                {renderFormattedText(msg.content)}
+              </div>
+            </div>
+          );
+        })}
+
+        {loading && (
+          <div className="flex items-center gap-2 text-slate-500 font-mono-code text-xs py-2">
+            <Cpu className="h-3.5 w-3.5 text-indigo-400 animate-spin" />
+            <span>{t.thinking}...</span>
+          </div>
+        )}
+
+        <div ref={chatEndRef} />
+      </div>
+
+      {/* Prompt Input Form */}
       <form
-        onSubmit={(e) => { e.preventDefault(); handleSend(input); }}
-        className="border-t border-slate-200/60 dark:border-slate-900 p-3 bg-white dark:bg-slate-900 shrink-0"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSend(input);
+        }}
+        className="p-2 border-t border-[#1e2638] bg-[#07090e] flex gap-2 font-mono-code"
       >
-        <div className="relative flex items-center">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={loading}
-            placeholder={t.placeholder}
-            className={`w-full rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 py-2.5 text-xs font-bold text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-all shadow-inner ${
-              lang === 'ar' ? 'text-right pr-4 pl-12' : 'text-left pl-4 pr-12'
-            }`}
-          />
-          <button
-            type="submit"
-            disabled={loading || !input.trim()}
-            className={`absolute top-1.5 flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-md shadow-indigo-600/10 hover:bg-indigo-500 disabled:bg-slate-200 dark:disabled:bg-slate-850 disabled:text-slate-400 dark:disabled:text-slate-600 transition-all hover:scale-[1.02] cursor-pointer ${
-              lang === 'ar' ? 'left-1.5' : 'right-1.5'
-            }`}
-          >
-            <Send className={`h-4 w-4 ${lang === 'ar' ? 'rotate-180' : ''}`} />
-          </button>
-        </div>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder={t.placeholder}
+          disabled={loading}
+          className="edu-input text-xs flex-1 py-1.5"
+        />
+        <button
+          type="submit"
+          disabled={loading || !input.trim()}
+          className="edu-btn edu-btn-primary px-3 py-1.5"
+        >
+          <Send className="h-3.5 w-3.5" />
+        </button>
       </form>
+
     </div>
   );
 }

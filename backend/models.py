@@ -35,7 +35,8 @@ class User(Base):
     chat_histories = relationship("ChatHistory", back_populates="user", cascade="all, delete-orphan")
     interviews = relationship("InterviewSession", back_populates="user", cascade="all, delete-orphan")
     lounge_posts = relationship("LoungePost", back_populates="user", cascade="all, delete-orphan")
-
+    study_logs = relationship("StudyLog", back_populates="user", cascade="all, delete-orphan")
+    study_tasks = relationship("StudyTask", back_populates="user", cascade="all, delete-orphan")
 
 class Course(Base):
     __tablename__ = "courses"
@@ -147,9 +148,22 @@ class Certificate(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
     uuid = Column(String, unique=True, default=lambda: str(uuid.uuid4()), index=True)
-    issue_date = Column(DateTime, default=datetime.datetime.utcnow)
+    certificate_id = Column(String, unique=True, index=True, nullable=True)  # e.g., EV-RA-2026-A7F4KD91
+    verification_token = Column(String, unique=True, index=True, nullable=True)  # 64-char hex
     recipient_name = Column(String, nullable=False)
+    student_email = Column(String, nullable=True)
+    course_title = Column(String, nullable=True)
+    issue_date = Column(DateTime, default=datetime.datetime.utcnow)
+    completion_date = Column(DateTime, default=datetime.datetime.utcnow)
+    hours_completed = Column(Integer, default=40)
+    skills = Column(String, default="Replit Agent, LLMs, Vector Search, FastAPI")
+    grade = Column(String, default="Distinction")
+    status = Column(String, default="Verified")  # Verified, Revoked, Expired
+    revocation_reason = Column(String, nullable=True)
     verification_qr_code_url = Column(String, nullable=True)
+    certificate_url = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
     
     user = relationship("User", back_populates="certificates")
     course = relationship("Course", back_populates="certificates")
@@ -195,3 +209,30 @@ class LoungePost(Base):
     liked_by = Column(JSON, default=list)
     
     user = relationship("User", back_populates="lounge_posts")
+
+class StudyLog(Base):
+    __tablename__ = "study_logs"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    minutes = Column(Float, default=30.0)
+    xp_gained = Column(Integer, default=50)
+    subject = Column(String, default="Python")
+    skill_tags = Column(JSON, default=list)  # ["Variables", "Loops"]
+    date = Column(DateTime, default=datetime.datetime.utcnow)
+    
+    user = relationship("User", back_populates="study_logs")
+
+class StudyTask(Base):
+    __tablename__ = "study_tasks"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    title = Column(String, nullable=False)
+    description = Column(Text, nullable=True)
+    task_type = Column(String, default="study") # study, project, exam
+    deadline = Column(DateTime, nullable=True)
+    is_completed = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    
+    user = relationship("User", back_populates="study_tasks")

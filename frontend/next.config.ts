@@ -9,6 +9,9 @@ const BACKEND_URL =
   "https://eduverse-backend-production.up.railway.app";
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: __dirname,
+  },
   /**
    * Proxy all /api/* requests to the FastAPI backend.
    * This means:

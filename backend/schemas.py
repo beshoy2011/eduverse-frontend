@@ -188,13 +188,44 @@ class ExamResultOut(BaseModel):
 class CertificateOut(BaseModel):
     id: int
     uuid: str
+    certificate_id: Optional[str] = None
+    verification_token: Optional[str] = None
     issue_date: datetime
     recipient_name: str
     course_title: str
+    status: Optional[str] = "Verified"
 
     class Config:
-        # Custom resolver for course title in routes
         from_attributes = True
+
+class CertificateVerificationResponse(BaseModel):
+    valid: bool
+    status: str  # Verified, Revoked, Expired
+    certificate_id: str
+    verification_token: str
+    uuid: str
+    student_name: str
+    student_email: Optional[str] = None
+    course_name: str
+    issue_date: datetime
+    completion_date: datetime
+    hours_completed: int
+    skills: List[str]
+    grade: str
+    revocation_reason: Optional[str] = None
+    instructor: str = "Beshoy Simon"
+    program: str = "EduVerse Signature Program"
+    verification_url: str
+
+class CertificateIssueRequest(BaseModel):
+    user_id: int
+    course_id: int
+    student_name: str
+    student_email: str
+    course_name: str
+    hours_completed: Optional[int] = 40
+    skills: Optional[str] = "Replit Agent, Next.js 16, LLMs, Vector Search, FastAPI"
+    grade: Optional[str] = "Distinction"
 
 
 # --- Dynamic Gamification Schemas ---
@@ -324,6 +355,87 @@ class LoungePostOut(BaseModel):
     created_at: datetime
     likes: int
     is_liked: bool = False
+
+    class Config:
+        from_attributes = True
+
+
+# Analytics Schemas
+class DailyActivity(BaseModel):
+    day: str
+    date_str: str
+    hours: float
+    xp: int
+
+class SubjectStat(BaseModel):
+    subject: str
+    progress_percent: float
+    total_lessons: int
+    completed_lessons: int
+    score_avg: float
+
+class SkillHeatmapItem(BaseModel):
+    skill: str
+    category: str
+    mastery_level: int # 1 to 5
+    status: str # Mastered, In Progress, Needs Review
+
+class AIInsightResponse(BaseModel):
+    strengths: List[str]
+    improvements: List[str]
+    recommended_lessons: List[dict]
+    weekly_summary: str
+
+class StudentAnalyticsOut(BaseModel):
+    total_learning_hours: float
+    total_xp: int
+    completion_rate: float
+    streak_days: int
+    weekly_activity: List[DailyActivity]
+    subject_comparison: List[SubjectStat]
+    skill_heatmap: List[SkillHeatmapItem]
+
+class TeacherStudentOverview(BaseModel):
+    id: int
+    name: str
+    email: str
+    xp: int
+    level: int
+    completed_courses: int
+    streak_days: int
+    avg_score: float
+    last_active: str
+
+class TeacherClassStats(BaseModel):
+    total_students: int
+    active_students_this_week: int
+    avg_completion_rate: float
+    top_subject: str
+    students: List[TeacherStudentOverview]
+
+# --- Study Planner Schemas ---
+class StudyTaskCreate(BaseModel):
+    title: str
+    description: Optional[str] = None
+    task_type: str = "study"
+    deadline: Optional[datetime] = None
+
+class StudyTaskUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    task_type: Optional[str] = None
+    deadline: Optional[datetime] = None
+    is_completed: Optional[bool] = None
+
+class StudyTaskOut(BaseModel):
+    id: int
+    user_id: int
+    title: str
+    description: Optional[str]
+    task_type: str
+    deadline: Optional[datetime]
+    is_completed: bool
+    created_at: datetime
 
     class Config:
         from_attributes = True

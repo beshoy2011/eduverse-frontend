@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { api } from '@/lib/api';
-import { UserPlus, Mail, Lock, User, AlertCircle, ArrowRight, X, Info, Settings, Key, HelpCircle, CheckCircle, ExternalLink } from 'lucide-react';
+import { Mail, Lock, User, AlertCircle, ArrowRight, X, Settings, Terminal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Script from 'next/script';
 
@@ -17,7 +17,6 @@ export default function Register() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Google Authentication & Simulation state
   const [showSetupModal, setShowSetupModal] = useState(false);
   const [setupTab, setSetupTab] = useState<'real' | 'sim'>('real');
   const [customClientId, setCustomClientId] = useState('');
@@ -26,7 +25,6 @@ export default function Register() {
   const [effectiveClientId, setEffectiveClientId] = useState('');
   const [isGsiLoaded, setIsGsiLoaded] = useState(false);
 
-  // Load client ID from localStorage or process.env on mount
   React.useEffect(() => {
     const envId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
     const storedId = localStorage.getItem('eduverse_google_client_id') || '';
@@ -42,7 +40,6 @@ export default function Register() {
     setLoading(true);
     try {
       const res = await api.loginWithGoogle(response.credential);
-      // Store token & user credentials
       localStorage.setItem('eduverse_token', res.access_token);
       localStorage.setItem('eduverse_user_name', res.user.name);
       localStorage.setItem('eduverse_user_email', res.user.email);
@@ -67,7 +64,7 @@ export default function Register() {
         
         const btnDiv = document.getElementById('google-signin-btn-container');
         if (btnDiv) {
-          btnDiv.innerHTML = ''; // Clear previous button if any
+          btnDiv.innerHTML = '';
           google.accounts.id.renderButton(
             btnDiv,
             { theme: 'outline', size: 'large', width: 280 }
@@ -81,7 +78,6 @@ export default function Register() {
     }
   };
 
-  // Re-run initialization when effectiveClientId or isGsiLoaded changes
   React.useEffect(() => {
     if (effectiveClientId && isGsiLoaded) {
       initializeGoogleSignIn(effectiveClientId);
@@ -111,7 +107,6 @@ export default function Register() {
     setEffectiveClientId(customClientId.trim());
     setShowSetupModal(false);
     
-    // Trigger prompt after GSI has a moment to re-init
     setTimeout(() => {
       const google = (window as any).google;
       if (google) {
@@ -119,12 +114,6 @@ export default function Register() {
         google.accounts.id.prompt();
       }
     }, 400);
-  };
-
-  const handleClearClientId = () => {
-    localStorage.removeItem('eduverse_google_client_id');
-    setCustomClientId('');
-    setEffectiveClientId(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '');
   };
 
   const handleSimSubmit = async (e: React.FormEvent) => {
@@ -135,7 +124,6 @@ export default function Register() {
     setShowSetupModal(false);
     try {
       const response = await api.loginWithGoogle('simulated_token', true, simEmail, simName);
-      // Store token & user credentials
       localStorage.setItem('eduverse_token', response.access_token);
       localStorage.setItem('eduverse_user_name', response.user.name);
       localStorage.setItem('eduverse_user_email', response.user.email);
@@ -154,115 +142,95 @@ export default function Register() {
 
     try {
       const response = await api.register({ name, email, password });
-      
-      // Store token & user credentials
       localStorage.setItem('eduverse_token', response.access_token);
       localStorage.setItem('eduverse_user_name', response.user.name);
       localStorage.setItem('eduverse_user_email', response.user.email);
-      
-      // Redirect to student dashboard
       router.push('/dashboard');
     } catch (err: any) {
-      setError(err.message || 'An error occurred during registration. Please try again.');
+      setError(err.message || 'Registration failed. Email may already be in use.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+    <div className="flex flex-col min-h-screen bg-[#07090e] text-slate-100 font-sans select-none">
       <Navbar />
 
-      <div className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        {/* Decorative Floating Nodes */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 h-80 w-80 rounded-full bg-indigo-600/5 blur-3xl animate-pulse-soft"></div>
-          <div className="absolute bottom-1/4 right-1/4 h-80 w-80 rounded-full bg-violet-600/5 blur-3xl animate-float-3"></div>
-        </div>
-
+      <div className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4 }}
-          className="max-w-md w-full space-y-8 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 p-8 rounded-2xl shadow-xl relative z-10"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-md w-full edu-panel p-8 bg-[#0d111a] border-[#1e2638] space-y-6 font-mono-code"
         >
-          <div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 mx-auto">
-              <UserPlus className="h-6 w-6" />
+          <div className="text-center space-y-2">
+            <div className="h-10 w-10 rounded bg-indigo-600/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center mx-auto">
+              <Terminal className="h-5 w-5" />
             </div>
-            <h2 className="mt-4 text-center text-3xl font-extrabold text-slate-900 dark:text-white">
-              Create Your Account
+            <h2 className="text-xl font-bold text-white tracking-tight">
+              Create Developer Account
             </h2>
-            <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-400">
-              Start learning programming from scratch for 100% free.
+            <p className="text-xs text-slate-400 font-sans">
+              Initialize your developer profile to track lesson progress, missions, and verified certs.
             </p>
           </div>
 
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             {error && (
-              <div className="rounded-lg bg-rose-500/10 border border-rose-500/20 p-3.5 text-sm text-rose-600 dark:text-rose-400 flex items-start gap-2.5">
-                <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
-                <span className="leading-snug">{error}</span>
+              <div className="rounded bg-rose-500/10 border border-rose-500/30 p-3 text-xs text-rose-400 flex items-start gap-2">
+                <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+                <span>{error}</span>
               </div>
             )}
 
-            <div className="space-y-4">
-              {/* Full Name */}
+            <div className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-                  Full Name
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  Developer Name
                 </label>
                 <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                    <User className="h-4 w-4" />
-                  </span>
+                  <User className="h-4 w-4 text-slate-500 absolute left-3 top-2.5" />
                   <input
                     type="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Beshoy Simon"
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 py-3 pl-10 pr-4 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:focus:border-indigo-400 dark:focus:ring-indigo-400 transition-colors"
+                    className="edu-input text-xs pl-9 py-2"
                   />
                 </div>
               </div>
 
-              {/* Email Address */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-                  Email Address
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  Developer Email
                 </label>
                 <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                    <Mail className="h-4 w-4" />
-                  </span>
+                  <Mail className="h-4 w-4 text-slate-500 absolute left-3 top-2.5" />
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="student@eduverse.org"
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 py-3 pl-10 pr-4 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:focus:border-indigo-400 dark:focus:ring-indigo-400 transition-colors"
+                    placeholder="dev@eduverse.org"
+                    className="edu-input text-xs pl-9 py-2"
                   />
                 </div>
               </div>
 
-              {/* Password */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-                  Password
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  Access Key (Password)
                 </label>
                 <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                    <Lock className="h-4 w-4" />
-                  </span>
+                  <Lock className="h-4 w-4 text-slate-500 absolute left-3 top-2.5" />
                   <input
                     type="password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 py-3 pl-10 pr-4 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:focus:border-indigo-400 dark:focus:ring-indigo-400 transition-colors"
+                    className="edu-input text-xs pl-9 py-2"
                   />
                 </div>
               </div>
@@ -271,272 +239,136 @@ export default function Register() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center items-center gap-2 rounded-xl bg-indigo-600 py-3 px-4 text-sm font-semibold text-white shadow-lg shadow-indigo-600/10 hover:bg-indigo-500 focus:outline-none transition-all hover:scale-[1.01]"
+              className="edu-btn edu-btn-primary w-full text-xs py-2.5"
             >
-              {loading ? 'Creating Account...' : 'Sign Up'}
-              <ArrowRight className="h-4 w-4" />
+              {loading ? 'Initializing...' : 'Create Account & Enter'}
+              <ArrowRight className="h-3.5 w-3.5" />
             </button>
           </form>
 
-          {/* Continue with Google button */}
-          <div className="flex items-center justify-center gap-2 my-4">
-            <span className="h-px w-full bg-slate-100 dark:bg-slate-800"></span>
-            <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase">Or</span>
-            <span className="h-px w-full bg-slate-100 dark:bg-slate-800"></span>
+          <div className="flex items-center gap-2 my-4">
+            <span className="h-px w-full bg-[#1e2638]"></span>
+            <span className="text-[10px] text-slate-500 uppercase">OR</span>
+            <span className="h-px w-full bg-[#1e2638]"></span>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             <button
               type="button"
               onClick={handleGoogleClick}
-              className="w-full flex justify-center items-center gap-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-3 px-4 text-sm font-semibold text-slate-700 dark:text-slate-200 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-850 focus:outline-none transition-all hover:scale-[1.01]"
+              className="edu-btn edu-btn-secondary w-full text-xs py-2.5 flex items-center justify-center gap-2"
             >
-              <svg className="h-5 w-5" viewBox="0 0 24 24">
-                <path
-                  fill="#EA4335"
-                  d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582l3.51-3.51C17.745 1.055 15.018 0 12 0 7.37 0 3.383 2.643 1.405 6.505l3.86 3.26Z"
-                />
-                <path
-                  fill="#4285F4"
-                  d="M23.49 12.275c0-.825-.075-1.62-.21-2.385H12v4.51h6.44c-.277 1.463-1.097 2.7-2.33 3.533l3.626 2.815c2.12-1.954 3.754-4.83 3.754-8.473Z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M5.266 14.235 1.405 17.495C3.383 21.357 7.37 24 12 24c3.08 0 5.673-1.02 7.56-2.775l-3.625-2.815c-1.037.697-2.36 1.117-3.935 1.117-3.218 0-5.954-2.17-6.924-5.1-.07-.2-.12-.41-.17-.63l-3.64 2.438Z"
-                />
-                <path
-                  fill="#34A853"
-                  d="M12 4.909c1.69 0 3.218.6 4.418 1.582l3.51-3.51C17.745 1.055 15.018 0 12 0 7.37 0 3.383 2.643 1.405 6.505l3.86 3.26c.97-2.93 3.706-5.1 6.924-5.1Z"
-                />
+              <svg className="h-4 w-4" viewBox="0 0 24 24">
+                <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582l3.51-3.51C17.745 1.055 15.018 0 12 0 7.37 0 3.383 2.643 1.405 6.505l3.86 3.26Z" />
+                <path fill="#4285F4" d="M23.49 12.275c0-.825-.075-1.62-.21-2.385H12v4.51h6.44c-.277 1.463-1.097 2.7-2.33 3.533l3.626 2.815c2.12-1.954 3.754-4.83 3.754-8.473Z" />
+                <path fill="#FBBC05" d="M5.266 14.235 1.405 17.495C3.383 21.357 7.37 24 12 24c3.08 0 5.673-1.02 7.56-2.775l-3.625-2.815c-1.037.697-2.36 1.117-3.935 1.117-3.218 0-5.954-2.17-6.924-5.1-.07-.2-.12-.41-.17-.63l-3.64 2.438Z" />
+                <path fill="#34A853" d="M12 4.909c1.69 0 3.218.6 4.418 1.582l3.51-3.51C17.745 1.055 15.018 0 12 0 7.37 0 3.383 2.643 1.405 6.505l3.86 3.26c.97-2.93 3.706-5.1 6.924-5.1Z" />
               </svg>
-              {effectiveClientId ? 'Sign up with Google' : 'Configure Google Sign In'}
+              <span>{effectiveClientId ? 'Sign up with Google' : 'Google Auth Config'}</span>
             </button>
 
-            {/* Real Google Auth container - hidden by default, populated when client ID exists */}
             {effectiveClientId && (
-              <div id="google-signin-btn-container" className="w-full flex justify-center mt-2 overflow-hidden" />
-            )}
-
-            {/* Dynmamic client ID status and settings option */}
-            {effectiveClientId && (
-              <div className="flex items-center justify-between px-2 text-[10px] text-slate-400 dark:text-slate-500">
-                <span className="flex items-center gap-1">
-                  <CheckCircle className="h-3 w-3 text-emerald-500" /> Client ID Active
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setShowSetupModal(true)}
-                  className="font-semibold hover:text-indigo-500 dark:hover:text-indigo-400 underline transition-colors"
-                >
-                  Configure / Reset
-                </button>
-              </div>
+              <div id="google-signin-btn-container" className="w-full flex justify-center mt-2" />
             )}
           </div>
 
-          <div className="text-center text-xs text-slate-500 mt-6 border-t border-slate-100 dark:border-slate-800 pt-4">
+          <div className="text-center text-xs text-slate-500 border-t border-[#1e2638] pt-4 font-sans">
             Already have an account?{' '}
-            <Link href="/login" className="font-bold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+            <Link href="/login" className="font-bold text-indigo-400 hover:underline">
               Sign In
             </Link>
           </div>
         </motion.div>
       </div>
 
-      {/* Google Setup & Simulation Modal */}
       <AnimatePresence>
         {showSetupModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowSetupModal(false)}
-              className="absolute inset-0 bg-slate-950/60 backdrop-blur-md"
+              className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
             />
-            
-            {/* Modal Body */}
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              transition={{ type: "spring", duration: 0.3 }}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 w-full max-w-lg relative z-10 shadow-2xl overflow-hidden"
+              className="edu-panel p-6 bg-[#0d111a] border-[#1e2638] w-full max-w-lg relative z-10 space-y-4 font-mono-code text-xs"
             >
-              {/* Close Button */}
               <button
                 onClick={() => setShowSetupModal(false)}
-                className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors bg-slate-100 dark:bg-slate-800 p-1.5 rounded-full"
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
               >
                 <X className="h-4 w-4" />
               </button>
 
-              <div className="flex items-center gap-2.5 text-indigo-600 dark:text-indigo-400 mb-4">
-                <Settings className="h-6 w-6 animate-spin-slow" />
-                <h3 className="text-xl font-bold font-sans">Google Auth Configuration</h3>
+              <div className="flex items-center gap-2 text-indigo-400">
+                <Settings className="h-4 w-4" />
+                <h3 className="text-sm font-bold">Google Auth Configuration</h3>
               </div>
 
-              {/* Tabs */}
-              <div className="flex border-b border-slate-100 dark:border-slate-800 mb-6">
+              <div className="flex border-b border-[#1e2638]">
                 <button
                   onClick={() => setSetupTab('real')}
-                  className={`flex-1 py-3 text-sm font-bold border-b-2 transition-colors ${
-                    setupTab === 'real'
-                      ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
-                      : 'border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
-                  }`}
+                  className={`flex-1 py-2 font-bold border-b-2 ${setupTab === 'real' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-500'}`}
                 >
-                  تسجيل دخول حقيقي (Real Login)
+                  Real Login
                 </button>
                 <button
                   onClick={() => setSetupTab('sim')}
-                  className={`flex-1 py-3 text-sm font-bold border-b-2 transition-colors ${
-                    setupTab === 'sim'
-                      ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
-                      : 'border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
-                  }`}
+                  className={`flex-1 py-2 font-bold border-b-2 ${setupTab === 'sim' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-500'}`}
                 >
-                  محاكاة المطورين (Simulation)
+                  Dev Simulation
                 </button>
               </div>
 
               {setupTab === 'real' ? (
-                <div className="space-y-4 text-right">
-                  <div className="bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/80 text-xs leading-relaxed text-slate-600 dark:text-slate-300 font-sans space-y-3 direction-rtl">
-                    <p className="font-bold text-slate-900 dark:text-white mb-1 flex items-center justify-end gap-1.5">
-                      <span>خطوات تفعيل تسجيل الدخول الحقيقي بجوجل:</span>
-                      <Info className="h-4 w-4 text-indigo-500 shrink-0" />
-                    </p>
-                    <ol className="list-decimal list-inside space-y-2 pr-2 text-right">
-                      <li>
-                        قم بزيارة{' '}
-                        <a
-                          href="https://console.cloud.google.com/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-indigo-600 dark:text-indigo-400 font-bold inline-flex items-center gap-0.5 hover:underline"
-                        >
-                          Google Cloud Console <ExternalLink className="h-3 w-3" />
-                        </a>
-                      </li>
-                      <li>أنشئ مشروعاً جديداً وقم بإعداد **OAuth consent screen** (اختره كـ External).</li>
-                      <li>
-                        اذهب إلى **Credentials** واضغط **Create Credentials** ثم اختر **OAuth client ID**.
-                      </li>
-                      <li>
-                        اختر نوع التطبيق **Web Application** وضَع في خانة **Authorized JavaScript origins** الرابط التالي:
-                        <code className="block bg-slate-200/60 dark:bg-slate-850 px-2 py-1 rounded text-[10px] text-rose-500 dark:text-rose-400 select-all text-left font-mono mt-1 w-fit ml-auto">
-                          http://localhost:3000
-                        </code>
-                      </li>
-                      <li>انسخ الـ **Client ID** وضعه بالأسفل فوراً للتجربة، أو احفظه في الملف:</li>
-                    </ol>
-                    <div className="pt-2 border-t border-slate-200/50 dark:border-slate-800/50 text-left font-mono text-[10px] text-slate-400 dark:text-slate-500 flex items-center justify-between">
-                      <span className="bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded text-indigo-600 dark:text-indigo-400">c:\...\frontend\.env.local</span>
-                      <span>مكان الحفظ الدائم</span>
-                    </div>
+                <form onSubmit={handleSaveClientId} className="space-y-3">
+                  <div>
+                    <label className="block text-[10px] text-slate-400 mb-1">Google Client ID</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="apps.googleusercontent.com..."
+                      value={customClientId}
+                      onChange={(e) => setCustomClientId(e.target.value)}
+                      className="edu-input text-xs"
+                    />
                   </div>
-
-                  <form onSubmit={handleSaveClientId} className="space-y-4 mt-4">
-                    <div className="text-left">
-                      <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-                        Google Client ID
-                      </label>
-                      <div className="relative">
-                        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
-                          <Key className="h-4 w-4" />
-                        </span>
-                        <input
-                          type="text"
-                          required
-                          placeholder="apps.googleusercontent.com..."
-                          value={customClientId}
-                          onChange={(e) => setCustomClientId(e.target.value)}
-                          className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 py-2.5 pl-9 pr-4 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-indigo-500 focus:outline-none dark:focus:border-indigo-400 transition-colors font-mono"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex gap-3">
-                      {localStorage.getItem('eduverse_google_client_id') && (
-                        <button
-                          type="button"
-                          onClick={handleClearClientId}
-                          className="flex-1 py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-850 hover:bg-slate-50 dark:hover:bg-slate-850 text-xs font-semibold text-rose-500 dark:text-rose-400 transition-all"
-                        >
-                          مسح الرمز (Clear ID)
-                        </button>
-                      )}
-                      <button
-                        type="submit"
-                        className="flex-[2] py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-colors shadow-md shadow-indigo-600/10"
-                      >
-                        حفظ وتفعيل فوري (Save & Activate)
-                      </button>
-                    </div>
-                  </form>
-                </div>
+                  <button type="submit" className="edu-btn edu-btn-primary w-full text-xs">
+                    Save & Activate
+                  </button>
+                </form>
               ) : (
-                <div className="space-y-4">
-                  <div className="bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/80 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
-                    <p className="font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-1.5">
-                      <Info className="h-4 w-4 text-indigo-500 shrink-0" />
-                      <span>Developer Simulation Mode (تخطي الإعدادات)</span>
-                    </p>
-                    <p className="text-slate-500 dark:text-slate-400">
-                      تسمح لك هذه الواجهة بتخطي إعدادات جوجل بالكامل أثناء التطوير، وتسجيل الدخول الفوري ببريد إلكتروني واسم وهمي.
-                    </p>
+                <form onSubmit={handleSimSubmit} className="space-y-3">
+                  <div>
+                    <label className="block text-[10px] text-slate-400 mb-1">Mock Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={simName}
+                      onChange={(e) => setSimName(e.target.value)}
+                      placeholder="Beshoy Simon"
+                      className="edu-input text-xs"
+                    />
                   </div>
-
-                  <form onSubmit={handleSimSubmit} className="space-y-4 mt-2">
-                    <div>
-                      <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-                        Mock Full Name
-                      </label>
-                      <div className="relative">
-                        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
-                          <User className="h-4 w-4" />
-                        </span>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Beshoy Simon"
-                          value={simName}
-                          onChange={(e) => setSimName(e.target.value)}
-                          className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 py-2.5 pl-9 pr-4 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-indigo-500 focus:outline-none dark:focus:border-indigo-400 transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-                        Mock Email Address
-                      </label>
-                      <div className="relative">
-                        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
-                          <Mail className="h-4 w-4" />
-                        </span>
-                        <input
-                          type="email"
-                          required
-                          placeholder="beshoy@eduverse.org"
-                          value={simEmail}
-                          onChange={(e) => setSimEmail(e.target.value)}
-                          className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 py-2.5 pl-9 pr-4 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-indigo-500 focus:outline-none dark:focus:border-indigo-400 transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full mt-2 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-colors shadow-md shadow-indigo-600/10"
-                    >
-                      {loading ? 'Authenticating...' : 'Simulate Google Login'}
-                    </button>
-                  </form>
-                </div>
+                  <div>
+                    <label className="block text-[10px] text-slate-400 mb-1">Mock Email</label>
+                    <input
+                      type="email"
+                      required
+                      value={simEmail}
+                      onChange={(e) => setSimEmail(e.target.value)}
+                      placeholder="dev@eduverse.org"
+                      className="edu-input text-xs"
+                    />
+                  </div>
+                  <button type="submit" className="edu-btn edu-btn-primary w-full text-xs">
+                    Simulate Developer Registration
+                  </button>
+                </form>
               )}
             </motion.div>
           </div>
