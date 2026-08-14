@@ -1,18 +1,4 @@
-/**
- * EduVerse — Centralized API Client
- * ------------------------------------
- * ALL API requests go through `fetchAPI()`.
- * API_URL is intentionally empty so every request uses the same origin as the
- * frontend (e.g. https://yourdomain.com/api/...). Next.js rewrites (next.config.ts)
- * then proxy /api/* to the FastAPI backend transparently.
- */
-
-// Empty string = same origin. Never hardcode localhost here — that breaks production.
-const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Interfaces
-// ─────────────────────────────────────────────────────────────────────────────
+const API_URL = '';
 
 export interface User {
   id: number;
@@ -38,7 +24,7 @@ export interface Course {
   id: number;
   title: string;
   description: string;
-  skills: string; // comma separated
+  skills: string;
   duration: string;
   difficulty: string;
   theme_style: string;
@@ -95,9 +81,32 @@ export interface ExamResult {
 export interface Certificate {
   id: number;
   uuid: string;
+  certificate_id?: string;
+  verification_token?: string;
   issue_date: string;
   recipient_name: string;
   course_title: string;
+  status?: string;
+}
+
+export interface CertificateVerification {
+  valid: boolean;
+  status: 'Verified' | 'Revoked' | 'Expired';
+  certificate_id: string;
+  verification_token: string;
+  uuid: string;
+  student_name: string;
+  student_email: string;
+  course_name: string;
+  issue_date: string;
+  completion_date: string;
+  hours_completed: number;
+  skills: string[];
+  grade: string;
+  revocation_reason?: string;
+  instructor: string;
+  program: string;
+  verification_url: string;
 }
 
 export interface LeaderboardEntry {
@@ -109,6 +118,65 @@ export interface LeaderboardEntry {
   rank_title: string;
   certificates_count: number;
   completed_courses_count: number;
+}
+
+export interface DailyActivity {
+  day: string;
+  date_str: string;
+  hours: number;
+  xp: number;
+}
+
+export interface SubjectStat {
+  subject: string;
+  progress_percent: number;
+  total_lessons: number;
+  completed_lessons: number;
+  score_avg: number;
+}
+
+export interface SkillHeatmapItem {
+  skill: string;
+  category: string;
+  mastery_level: number;
+  status: 'Mastered' | 'In Progress' | 'Needs Review';
+}
+
+export interface AIInsightResponse {
+  strengths: string[];
+  improvements: string[];
+  recommended_lessons: { id: number; title: string; course: string; estimated_min: number }[];
+  weekly_summary: string;
+}
+
+export interface StudentAnalyticsData {
+  total_learning_hours: number;
+  total_xp: number;
+  completion_rate: number;
+  streak_days: number;
+  weekly_activity: DailyActivity[];
+  subject_comparison: SubjectStat[];
+  skill_heatmap: SkillHeatmapItem[];
+}
+
+export interface TeacherStudentOverview {
+  id: number;
+  name: string;
+  email: string;
+  xp: number;
+  level: number;
+  completed_courses: number;
+  streak_days: number;
+  avg_score: number;
+  last_active: string;
+}
+
+export interface TeacherClassStats {
+  total_students: number;
+  active_students_this_week: number;
+  avg_completion_rate: number;
+  top_subject: string;
+  students: TeacherStudentOverview[];
 }
 
 export interface LeaderboardStats {
@@ -159,9 +227,16 @@ export interface ProfileData {
   active_theme?: string;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Core fetch wrapper
-// ─────────────────────────────────────────────────────────────────────────────
+export interface StudyTask {
+  id: number;
+  user_id: number;
+  title: string;
+  description?: string;
+  task_type: string;
+  deadline?: string;
+  is_completed: boolean;
+  created_at: string;
+}
 
 const isServer = typeof window === 'undefined';
 
@@ -185,14 +260,10 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
       headers,
     });
   } catch (networkError) {
-    // Network-level failure (no connection, DNS error, etc.)
     throw new Error('Network error: Unable to reach the server. Please check your connection.');
   }
 
-  // ── Error handling ──────────────────────────────────────────────────────────
-
   if (!res.ok) {
-    // 401 Unauthorized — clear session and redirect to login
     if (res.status === 401) {
       if (!isServer) {
         localStorage.removeItem('eduverse_token');
@@ -210,12 +281,10 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
       throw new Error('Session expired. Please log in again.');
     }
 
-    // 403 Forbidden
     if (res.status === 403) {
       throw new Error('Access denied. You do not have permission for this action.');
     }
 
-    // 404 Not Found
     if (res.status === 404) {
       let detail = 'Resource not found.';
       try {
@@ -225,17 +294,14 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
       throw new Error(detail);
     }
 
-    // 422 Validation Error
     if (res.status === 422) {
       throw new Error('Invalid request data. Please check your inputs.');
     }
 
-    // 500 Internal Server Error
     if (res.status >= 500) {
       throw new Error('Server error. Please try again later.');
     }
 
-    // Generic error — try to parse backend detail message
     let errorMsg = `Request failed (${res.status})`;
     try {
       const errorJson = await res.json();
@@ -247,14 +313,7 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
   return res.json();
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// API methods
-// ─────────────────────────────────────────────────────────────────────────────
-
 export const api = {
-
-  // ── Auth ───────────────────────────────────────────────────────────────────
-
   async register(data: any): Promise<{ access_token: string; token_type: string; user: User }> {
     return fetchAPI('/api/auth/register', { method: 'POST', body: JSON.stringify(data) });
   },
@@ -279,8 +338,6 @@ export const api = {
     return fetchAPI('/api/auth/me');
   },
 
-  // ── Courses ────────────────────────────────────────────────────────────────
-
   async getCourses(): Promise<Course[]> {
     return fetchAPI('/api/courses');
   },
@@ -297,13 +354,9 @@ export const api = {
     return fetchAPI(`/api/courses/${courseId}/enroll`, { method: 'POST' });
   },
 
-  // ── Lessons ────────────────────────────────────────────────────────────────
-
   async getLesson(lessonId: number): Promise<LessonDetail> {
     return fetchAPI(`/api/lessons/${lessonId}`);
   },
-
-  // ── Progress ───────────────────────────────────────────────────────────────
 
   async getCourseProgress(courseId: number): Promise<{ completed_lesson_ids: number[]; percent_complete: number }> {
     return fetchAPI(`/api/progress/${courseId}`);
@@ -312,8 +365,6 @@ export const api = {
   async markLessonComplete(lessonId: number): Promise<any> {
     return fetchAPI(`/api/progress/${lessonId}/complete`, { method: 'POST' });
   },
-
-  // ── Chat / AI Tutor ────────────────────────────────────────────────────────
 
   async sendChatMessage(message: string, lessonId?: number, history?: ChatMessage[]): Promise<{ reply: string }> {
     return fetchAPI('/api/chat', {
@@ -325,8 +376,6 @@ export const api = {
   async getChatHistory(lessonId: number): Promise<ChatMessage[]> {
     return fetchAPI(`/api/chat/history/${lessonId}`);
   },
-
-  // ── Exams ──────────────────────────────────────────────────────────────────
 
   async getExam(courseId: number): Promise<Exam> {
     return fetchAPI(`/api/exams/${courseId}`);
@@ -342,7 +391,9 @@ export const api = {
     });
   },
 
-  // ── Certificates ───────────────────────────────────────────────────────────
+  async verifyCertificate(identifier: string): Promise<CertificateVerification> {
+    return fetchAPI(`/api/certificates/verify/${encodeURIComponent(identifier)}`);
+  },
 
   async getUserCertificates(): Promise<Certificate[]> {
     return fetchAPI('/api/certificates/user');
@@ -352,12 +403,9 @@ export const api = {
     return fetchAPI(`/api/certificates/uuid/${uuid}`);
   },
 
-  /** Returns a relative URL — works from any page, on any domain. */
   getDownloadUrl(uuid: string): string {
     return `/api/certificates/download/${uuid}`;
   },
-
-  // ── Leaderboard ────────────────────────────────────────────────────────────
 
   async getMonthlyLeaderboard(): Promise<LeaderboardEntry[]> {
     return fetchAPI('/api/leaderboard/monthly');
@@ -371,8 +419,6 @@ export const api = {
     return fetchAPI('/api/leaderboard/stats');
   },
 
-  // ── Challenges ─────────────────────────────────────────────────────────────
-
   async getChallenges(): Promise<Challenge[]> {
     return fetchAPI('/api/challenges');
   },
@@ -380,8 +426,6 @@ export const api = {
   async claimChallenge(challengeId: string): Promise<{ status: string; claimed_xp: number; new_xp: number; new_level: number }> {
     return fetchAPI(`/api/challenges/claim/${challengeId}`, { method: 'POST' });
   },
-
-  // ── Profile ────────────────────────────────────────────────────────────────
 
   async getUserProfile(userId: number): Promise<ProfileData> {
     return fetchAPI(`/api/profile/${userId}`);
@@ -394,8 +438,6 @@ export const api = {
     });
   },
 
-  // ── AI Code Reviewer ───────────────────────────────────────────────────────
-
   async aiReview(
     code: string,
     lessonTitle: string,
@@ -406,8 +448,6 @@ export const api = {
       body: JSON.stringify({ code, lesson_title: lessonTitle, lesson_content: lessonContent }),
     });
   },
-
-  // ── AI Mock Interview ──────────────────────────────────────────────────────
 
   async startInterview(role: string): Promise<any> {
     return fetchAPI('/api/interview/start', { method: 'POST', body: JSON.stringify({ role }) });
@@ -424,8 +464,6 @@ export const api = {
     return fetchAPI('/api/interview/history');
   },
 
-  // ── Coder Shop ─────────────────────────────────────────────────────────────
-
   async getShopItems(): Promise<any[]> {
     return fetchAPI('/api/shop/items');
   },
@@ -441,8 +479,6 @@ export const api = {
     });
   },
 
-  // ── Quests ─────────────────────────────────────────────────────────────────
-
   async getQuests(): Promise<Challenge[]> {
     return fetchAPI('/api/quests');
   },
@@ -450,8 +486,6 @@ export const api = {
   async claimQuest(questId: string): Promise<User> {
     return fetchAPI(`/api/quests/claim/${questId}`, { method: 'POST' });
   },
-
-  // ── Lounge Message Board ───────────────────────────────────────────────────
 
   async getLoungePosts(): Promise<any[]> {
     return fetchAPI('/api/lounge/posts');
@@ -463,5 +497,37 @@ export const api = {
 
   async likeLoungePost(postId: number): Promise<any> {
     return fetchAPI(`/api/lounge/like/${postId}`, { method: 'POST' });
+  },
+
+  async getStudentAnalytics(): Promise<StudentAnalyticsData> {
+    return fetchAPI('/api/analytics/student');
+  },
+
+  async getAIInsights(): Promise<AIInsightResponse> {
+    return fetchAPI('/api/analytics/insights', { method: 'POST' });
+  },
+
+  async getTeacherAnalytics(): Promise<TeacherClassStats> {
+    return fetchAPI('/api/analytics/teacher');
+  },
+
+  async exportAnalyticsReport(format: 'json' | 'csv' = 'json'): Promise<any> {
+    return fetchAPI(`/api/analytics/export?format=${format}`);
+  },
+
+  async getStudyTasks(): Promise<StudyTask[]> {
+    return fetchAPI('/api/planner/tasks');
+  },
+
+  async createStudyTask(data: { title: string; description?: string; task_type?: string; deadline?: string }): Promise<StudyTask> {
+    return fetchAPI('/api/planner/tasks', { method: 'POST', body: JSON.stringify(data) });
+  },
+
+  async updateStudyTask(taskId: number, data: Partial<StudyTask>): Promise<StudyTask> {
+    return fetchAPI(`/api/planner/tasks/${taskId}`, { method: 'PUT', body: JSON.stringify(data) });
+  },
+
+  async deleteStudyTask(taskId: number): Promise<any> {
+    return fetchAPI(`/api/planner/tasks/${taskId}`, { method: 'DELETE' });
   },
 };
