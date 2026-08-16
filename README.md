@@ -1,72 +1,122 @@
-# EduVerse 🚀
-> **An interactive coding workbench where students learn programming by breaking, debugging, and understanding code.**
+EduVerse 🚀
+> Learn to code by writing code, breaking it, and figuring out why it broke. Learning programming can be frustrating.
 
-[![Next.js](https://img.shields.io/badge/Frontend-Next.js%2016-black?style=for-the-badge&logo=nextdotjs)](https://nextjs.org/)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![SQLite](https://img.shields.io/badge/Database-SQLite-003B57?style=for-the-badge&logo=sqlite)](https://sqlite.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
+You can watch a tutorial, understand everything while watching it, and then get completely stuck when you try to write the same thing yourself.
 
----
+I wanted to build something around that problem.
 
-## 💡 The Philosophy: "Learn by breaking things."
+EduVerse is an interactive coding platform where students learn by actually experimenting with code, making mistakes, debugging them, and understanding what happened.
 
-Whenever students learn programming, static video lectures often lead to tutorial paralysis. Watching someone else write clean code does not teach you how to react when your own program crashes.
+The idea is simple:
 
-EduVerse is designed around the actual engineering loop:
-
-```
 LEARN → WRITE → RUN → BREAK → DEBUG → UNDERSTAND
-```
 
-1. **LEARN**: Core concepts explained with real-world developer analogies.
-2. **WRITE**: Browser-native coding without complex local tooling setups.
-3. **RUN**: Instant execution in Python 3.12, C++20 GCC, and Web runtimes.
-4. **BREAK**: Intentional edge cases and boundary stress tests.
-5. **DEBUG**: Line-level error markers and structured diagnostic AST traces.
-6. **UNDERSTAND**: Internalizing root cause mechanics and earning cryptographically verified certificates.
+Instead of trying to prevent students from making mistakes, EduVerse makes mistakes part of the learning process.
 
 ---
 
-## ✨ Features
+## 💡 The Idea
 
-- **💻 Interactive Pair-Debugging Workbench**: Write, run, and inspect Python and C++ directly in the browser with line-by-line error markers.
-- **🔍 Context Diagnostic Copilot**: AST-aware mentor that identifies *WHERE* and *WHY* errors occur and prompts hypotheses instead of spoon-feeding answers.
-- **🎯 Incident Response Missions**: Tackle real engineering challenge quests (e.g. *The Empty List Crash*, *Rogue Off-by-One Iteration*).
-- **📜 Cryptographic Certificate Studio**: Complete a course syllabus and pass the final exam to issue an auditable certificate with verifiable SHA signatures.
-- **📊 Developer Telemetry & Study Planner**: Track your active coding streaks, mastery matrix, and milestone progress.
-- **🛒 Virtual Coder Depot**: Earn XP by resolving bugs and unlock IDE visual themes, holographic avatar frames, and streak freeze utilities.
+When you're learning programming, getting an error isn't necessarily a bad thing.
 
----
+An error can teach you:
 
-## 🛠️ Tech Stack & Architecture
+- what your code is actually doing
+- how programming languages behave
+- how to read error messages
+- how to find the cause of a bug
+- how to think like a developer
 
-- **Frontend**: Next.js 16 (App Router), TypeScript, Tailwind CSS, Lucide Icons, Framer Motion
-- **Backend**: Python 3.11 / 3.12, FastAPI, SQLAlchemy, SQLite
-- **Authentication**: JWT (JSON Web Tokens) with secure password hashing and Google Sign-In support
-- **Verification Engine**: SHA-256 cryptographic verification tokens with public ledger lookup
+EduVerse is designed around this idea.
+
+Students can write code, run it, encounter problems, investigate them, and gradually learn how to solve similar problems on their own.
 
 ---
 
-## 🚀 Running Locally
+## ✨ What You Can Do
 
-### 1. Frontend
-```bash
+
+### 💻 Code in the Browser
+
+Students can write and run code without having to set up a complete development environment on their computer.
+
+EduVerse currently focuses on Python and C++, alongside web development.
+
+### 🐛 Learn Through Bugs
+
+Some challenges intentionally introduce situations that can cause common programming mistakes.
+
+For example:
+
+- Empty list errors
+- Off-by-one mistakes
+- Unexpected input
+- Boundary cases
+- Logic errors
+
+The goal isn't simply to get a green "correct" mesage.
+
+The goal is to understand **why the program behaved that way**.
+
+### 🔍 Debug With Context
+
+EduVerse provides debugging information around errors and uses code structure to provide more useful context.
+
+Instead of immediately giving students the final answer, the system is designed to encourage them to investigate and form their own hypothesis first.
+
+### 🎯 Engineering-Style Missions
+
+Programming exercises are presented as small incidents or missions rather than only traditional questions.
+
+For example:
+
+> **The Empty List Crash**
+
+A program that worked perfectly during testing suddenly crashes when it receives an empty list.
+
+The student has to investigate what happened and fix the underlying problem.
+
+### 📜 Certificates
+
+🚀 Run It Locally
+Frontend
 cd frontend
 npm install
 npm run dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser.
+Open:
 
-### 2. Backend (Optional for full API mode)
-```bash
+http://localhost:3000
+
+Backend
 cd backend
 pip install -r requirements.txt
 python main.py
-```
-Backend API will be accessible on `http://localhost:8000`.
 
----
+The API will run on:
 
+http://localhost:8000
+
+🎯 What I'm Trying to Build
+
+EduVerse isn't meant to replace teachers, courses, or documentation.
+
+It's meant to solve a smaller problem:
+
+How do we get students to spend more time actually thinking about code instead of just watching someone else write it?
+
+I believe one of the best ways is to let students experiment.
+
+Let them break things.
+
+Let them get confused.
+
+Then give them the tools to understand what happened.
+
+That's the experience I'm trying to build with EduVerse.
+
+📜 License
+
+EduVerse is open-source software built for coding education and experimentation.
 ## 📜 License
 Open-source software designed for coding education.
