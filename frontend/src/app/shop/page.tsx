@@ -102,10 +102,10 @@ export default function ShopPage() {
 
   if (isLoading || !currentUser) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col font-mono-code text-xs">
+      <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col font-mono-code text-xs">
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center space-y-2">
-          <Cpu className="h-8 w-8 animate-spin text-[#8052ff]" />
+          <Cpu className="h-8 w-8 animate-spin text-indigo-400" />
           <span>Accessing Virtual Coder Depot...</span>
         </div>
       </div>
@@ -115,10 +115,10 @@ export default function ShopPage() {
   const unlocked = currentUser.unlocked_items || [];
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col font-sans select-none">
+    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col font-sans select-none">
       <Navbar />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-12 space-y-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-8 space-y-8">
         
         <div className="fixed bottom-5 right-5 z-50 space-y-2 max-w-sm w-full font-mono-code text-xs">
           <AnimatePresence>
@@ -127,7 +127,7 @@ export default function ShopPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                className="bg-[#15846e]/20 border border-[#15846e]/40 p-3 text-[#15846e] flex items-center gap-2 shadow-2xl backdrop-blur-md"
+                className="bg-emerald-500/20 border border-emerald-500/40 rounded p-3 text-emerald-400 flex items-center gap-2 shadow-2xl backdrop-blur-md"
               >
                 <CheckCircle2 className="h-4 w-4 shrink-0" />
                 <p>{successMsg}</p>
@@ -139,7 +139,7 @@ export default function ShopPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                className="bg-rose-500/20 border border-rose-500/40 p-3 text-rose-400 flex items-center gap-2 shadow-2xl backdrop-blur-md"
+                className="bg-rose-500/20 border border-rose-500/40 rounded p-3 text-rose-400 flex items-center gap-2 shadow-2xl backdrop-blur-md"
               >
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <p>{errorMsg}</p>
@@ -148,23 +148,23 @@ export default function ShopPage() {
           </AnimatePresence>
         </div>
 
-        <div className="p-6 border border-white/10 bg-black flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono-code">
+        <div className="edu-panel p-6 bg-[#0d111a] border-[#1e2638] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono-code">
           <div className="space-y-1">
-            <span className="text-[11px] text-[#ffb829] font-bold flex items-center gap-1">
-              <ShoppingBag className="h-3 w-3" /> CODER DEPOT // ARTIFACT EXCHANGE
+            <span className="edu-badge edu-badge-cyan flex items-center gap-1">
+              <ShoppingBag className="h-3 w-3" /> VIRTUAL CODER DEPOT
             </span>
             <h1 className="text-2xl font-extrabold text-white">Developer Workspace Cosmetics & Utilities</h1>
-            <p className="text-[#9a9a9a] text-xs font-sans">
+            <p className="text-slate-400 text-xs font-sans">
               Exchange earned XP for IDE visual themes, avatar frames, and streak freeze protections.
             </p>
           </div>
 
-          <div className="p-3.5 border border-white/10 bg-black text-right shrink-0">
-            <span className="text-[10px] text-[#9a9a9a] font-bold uppercase tracking-wider block">XP Balance</span>
+          <div className="edu-panel p-3.5 bg-[#07090e] border-[#1e2638] text-right shrink-0">
+            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">XP Balance</span>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <Zap className="h-5 w-5 text-[#ffb829] fill-[#ffb829]" />
+              <Zap className="h-5 w-5 text-amber-400 fill-amber-400" />
               <span className="text-xl font-extrabold text-white">{currentUser.xp}</span>
-              <span className="text-xs text-[#9a9a9a]">XP</span>
+              <span className="text-xs text-slate-400">XP</span>
             </div>
           </div>
         </div>
@@ -172,20 +172,20 @@ export default function ShopPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
           <div className="space-y-4 font-mono-code">
-            <h3 className="text-xs font-bold text-[#8052ff] uppercase tracking-widest border-b border-white/10 pb-2 flex items-center gap-2">
+            <h3 className="text-xs font-bold text-indigo-400 uppercase tracking-widest border-b border-[#1e2638] pb-2 flex items-center gap-2">
               <Shield className="h-4 w-4" /> Workspace Consumables
             </h3>
             
             {items.filter(i => i.category === 'consumable').map(item => (
-              <div key={item.id} className="p-4 border border-white/10 bg-black space-y-3">
+              <div key={item.id} className="edu-panel p-4 bg-[#0d111a] border-[#1e2638] space-y-3">
                 <div className="flex justify-between items-center">
                   <h4 className="text-xs font-bold text-white">{item.name}</h4>
-                  <span className="text-[10px] text-[#8052ff] border border-[#8052ff]/30 px-2 py-0.5">Owned: {currentUser.streak_freezes}</span>
+                  <span className="edu-badge edu-badge-indigo">Owned: {currentUser.streak_freezes}</span>
                 </div>
-                <p className="text-[#9a9a9a] text-xs font-sans leading-relaxed">{item.description}</p>
+                <p className="text-slate-400 text-xs font-sans leading-relaxed">{item.description}</p>
                 
-                <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                  <span className="text-[#ffb829] font-bold text-xs">{item.cost} XP</span>
+                <div className="flex items-center justify-between pt-2 border-t border-[#1e2638]">
+                  <span className="text-amber-400 font-bold text-xs">{item.cost} XP</span>
                   <button
                     onClick={() => handleBuy(item.id)}
                     disabled={isProcessing === item.id || currentUser.xp < item.cost}
@@ -199,7 +199,7 @@ export default function ShopPage() {
           </div>
 
           <div className="space-y-4 md:col-span-2 font-mono-code">
-            <h3 className="text-xs font-bold text-[#15846e] uppercase tracking-widest border-b border-white/10 pb-2 flex items-center gap-2">
+            <h3 className="text-xs font-bold text-cyan-400 uppercase tracking-widest border-b border-[#1e2638] pb-2 flex items-center gap-2">
               <Award className="h-4 w-4" /> IDE Themes & Holographic Frames
             </h3>
             
@@ -211,31 +211,36 @@ export default function ShopPage() {
                   : currentUser.active_theme === item.id;
                   
                 return (
-                  <div key={item.id} className="p-4 border border-white/10 bg-black flex flex-col justify-between space-y-4 hover:border-white/30 transition-all">
+                  <div key={item.id} className="edu-panel p-4 bg-[#0d111a] border-[#1e2638] flex flex-col justify-between space-y-4 hover:border-[#2d3852] transition-all">
                     <div className="space-y-2">
                       <div className="flex justify-between items-start">
                         <h4 className="text-xs font-bold text-white font-sans">{item.name}</h4>
-                        <span className="text-[10px] text-[#9a9a9a] uppercase border border-white/10 px-2 py-0.5">{item.category}</span>
+                        <span className="edu-badge edu-badge-cyan">{item.category}</span>
                       </div>
                       
                       <div className="py-2">
-                        <div className="w-full h-8 border border-white/15 bg-black flex items-center justify-center text-[10px] font-bold tracking-wider text-[#bdbdbd]">
+                        <div className={`w-full h-8 rounded border flex items-center justify-center text-[10px] font-bold tracking-wider ${
+                          item.id === 'theme_cyberpunk' ? 'bg-[#050811] border-cyan-500 text-cyan-400' :
+                          item.id === 'theme_matrix'    ? 'bg-[#020b04] border-emerald-500 text-emerald-400' :
+                          item.id === 'theme_aurora'    ? 'bg-[#070614] border-purple-500 text-purple-300' :
+                          'bg-[#07090e] border-[#1e2638] text-slate-400'
+                        }`}>
                           {item.name}
                         </div>
                       </div>
 
-                      <p className="text-[#9a9a9a] text-xs font-sans leading-relaxed">{item.description}</p>
+                      <p className="text-slate-400 text-xs font-sans leading-relaxed">{item.description}</p>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                    <div className="flex items-center justify-between pt-2 border-t border-[#1e2638]">
                       {!isUnlocked ? (
-                        <span className="text-[#ffb829] font-bold text-xs">{item.cost} XP</span>
+                        <span className="text-amber-400 font-bold text-xs">{item.cost} XP</span>
                       ) : <span />}
 
                       <div>
                         {isUnlocked ? (
                           isActive ? (
-                            <span className="text-[10px] text-[#15846e] border border-[#15846e]/40 px-2 py-0.5">Active Theme</span>
+                            <span className="edu-badge edu-badge-emerald">Active Theme</span>
                           ) : (
                             <button
                               onClick={() => handleActivate(item.id, item.category)}

@@ -3,193 +3,105 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* =====================================================================
-   EDUVERSE REFERENCE DESIGN SYSTEM
-   Editorial • Minimal • Experimental • Premium • Dark • Typographic
+   EDUVERSE DEVELOPER-NATIVE DESIGN LANGUAGE SYSTEM
    ===================================================================== */
-
-@theme {
-  /* Colors */
-  --color-void: #000000;
-  --color-bone-white: #ffffff;
-  --color-ash-gray: #9a9a9a;
-  --color-silver-mist: #bdbdbd;
-  --color-electric-iris: #8052ff;
-  --color-saffron-spark: #ffb829;
-  --color-deep-verdant: #15846e;
-
-  /* Typography */
-  --font-ppneuemontreal: 'PPNeueMontreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-
-  /* Typography — Scale */
-  --text-caption: 12px;
-  --leading-caption: 1.5;
-  --text-nav-label: 14px;
-  --leading-nav-label: 1.2;
-  --tracking-nav-label: 0.35px;
-  --text-body: 18px;
-  --leading-body: 1.5;
-  --text-heading-2xs: 24px;
-  --leading-heading-2xs: 1.25;
-  --tracking-heading-2xs: -0.48px;
-  --text-heading-xs: 27px;
-  --leading-heading-xs: 1;
-  --text-subheading: 36px;
-  --leading-subheading: 1.2;
-  --text-heading-sm: 42px;
-  --leading-heading-sm: 1.2;
-  --tracking-heading-sm: -1.68px;
-  --text-heading: 48px;
-  --leading-heading: 1.1;
-  --tracking-heading: -1.68px;
-  --text-heading-lg: 78px;
-  --leading-heading-lg: 1.1;
-  --tracking-heading-lg: -3.12px;
-  --text-display: 113px;
-  --leading-display: 1.1;
-  --tracking-display: -4.52px;
-
-  /* Spacing */
-  --spacing-6: 6px;
-  --spacing-12: 12px;
-  --spacing-18: 18px;
-  --spacing-24: 24px;
-  --spacing-30: 30px;
-  --spacing-36: 36px;
-  --spacing-60: 60px;
-  --spacing-96: 96px;
-  --spacing-120: 120px;
-
-  /* Border Radius */
-  --radius-3xl: 24px;
-  --radius-full: 9999px;
-}
 
 @layer base {
   :root {
     --font-mono-code: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
-    --font-sans-ui: 'PPNeueMontreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-sans-ui: 'Inter', system-ui, -apple-system, sans-serif;
 
-    /* Theme tokens mapped to root */
-    --void: #000000;
-    --bone-white: #ffffff;
-    --ash-gray: #9a9a9a;
-    --silver-mist: #bdbdbd;
-    --electric-iris: #8052ff;
-    --saffron-spark: #ffb829;
-    --deep-verdant: #15846e;
+    /* Light Theme (Clean Developer Slate) */
+    --canvas-bg: #f8fafc;
+    --panel-bg: #ffffff;
+    --panel-sub: #f1f5f9;
+    --panel-border: #e2e8f0;
+    --panel-border-bright: #cbd5e1;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    
+    --syntax-indigo: #4f46e5;
+    --syntax-cyan: #0284c7;
+    --terminal-emerald: #059669;
+    --diagnostic-rose: #e11d48;
+    --compiler-amber: #d97706;
+    
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
 
-    /* Compatibility variables */
-    --background: #000000;
-    --foreground: #ffffff;
-    --card: #000000;
-    --card-foreground: #ffffff;
-    --border: rgba(255, 255, 255, 0.12);
+    /* Legacy compatibility mappings */
+    --background: var(--canvas-bg);
+    --foreground: var(--text-primary);
+    --card: var(--panel-bg);
+    --card-foreground: var(--text-primary);
+    --primary: var(--syntax-indigo);
+    --border: var(--panel-border);
+    --radius: 0.375rem;
+  }
+
+  .dark {
+    /* Obsidian Dark Workspace (Primary EduVerse Aesthetic) */
+    --canvas-bg: #07090e;
+    --panel-bg: #0d111a;
+    --panel-sub: #121824;
+    --panel-border: #1e2638;
+    --panel-border-bright: #2d3852;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    
+    --syntax-indigo: #6366f1;
+    --syntax-cyan: #38bdf8;
+    --terminal-emerald: #10b981;
+    --diagnostic-rose: #f43f5e;
+    --compiler-amber: #f59e0b;
+
+    /* Legacy compatibility mappings */
+    --background: var(--canvas-bg);
+    --foreground: var(--text-primary);
+    --card: var(--panel-bg);
+    --card-foreground: var(--text-primary);
+    --primary: var(--syntax-indigo);
+    --border: var(--panel-border);
   }
 
   body {
-    background-color: var(--void);
-    color: var(--bone-white);
+    background-color: var(--canvas-bg);
+    color: var(--text-primary);
     font-family: var(--font-sans-ui);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     overflow-x: hidden;
-    letter-spacing: -0.015em;
-    selection-background-color: rgba(128, 82, 255, 0.4);
-    selection-color: #ffffff;
+    letter-spacing: -0.011em;
   }
 
-  ::selection {
-    background: rgba(128, 82, 255, 0.4);
-    color: #ffffff;
-  }
-
+  /* Monospace typography helpers */
   code, pre, kbd, samp, .font-mono-code {
     font-family: var(--font-mono-code) !important;
   }
 }
 
-/* Typography scale utility classes */
-.font-display {
-  font-size: clamp(48px, 9vw, 113px);
-  line-height: 1.05;
-  letter-spacing: -0.04em;
-  font-weight: 800;
-}
-
-.font-heading-lg {
-  font-size: clamp(38px, 6vw, 78px);
-  line-height: 1.1;
-  letter-spacing: -0.035em;
-  font-weight: 700;
-}
-
-.font-heading {
-  font-size: clamp(32px, 4.5vw, 48px);
-  line-height: 1.15;
-  letter-spacing: -0.03em;
-  font-weight: 700;
-}
-
-.font-heading-sm {
-  font-size: clamp(26px, 3.5vw, 42px);
-  line-height: 1.2;
-  letter-spacing: -0.025em;
-  font-weight: 700;
-}
-
-.font-subheading {
-  font-size: clamp(22px, 2.8vw, 36px);
-  line-height: 1.25;
-  letter-spacing: -0.02em;
-  font-weight: 600;
-}
-
-.font-heading-xs {
-  font-size: 27px;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-  font-weight: 600;
-}
-
-.font-heading-2xs {
-  font-size: 24px;
-  line-height: 1.25;
-  letter-spacing: -0.015em;
-  font-weight: 600;
-}
-
-.font-body {
-  font-size: 18px;
-  line-height: 1.5;
-  font-weight: 400;
-}
-
-.font-nav-label {
-  font-size: 14px;
-  line-height: 1.2;
-  letter-spacing: 0.35px;
-  font-weight: 500;
-}
-
-.font-caption {
-  font-size: 12px;
-  line-height: 1.5;
-  font-weight: 400;
-}
-
 /* Custom Minimalist IDE Scrollbars */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 3px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(30, 38, 56, 0.8);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #8052ff;
+  background: rgba(99, 102, 241, 0.4);
 }
 
+/* Custom Scrollbar-None Utility */
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
@@ -199,134 +111,323 @@
 }
 
 /* =====================================================================
-   EDITORIAL SURFACES & BUTTONS
+   SURFACE HIERARCHY & IDE PANELS
    ===================================================================== */
 
-.edu-border {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.edu-border-hover {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-.edu-border-hover:hover {
-  border-color: rgba(255, 255, 255, 0.28);
-}
-
+/* Core Flat IDE Panel */
 .edu-panel {
-  background-color: #000000;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  position: relative;
+  background-color: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
+
+.edu-panel-hover:hover {
+  border-color: var(--panel-border-bright);
+  box-shadow: 0 6px 24px -4px rgba(0, 0, 0, 0.35);
+}
+
+.edu-panel-sub {
+  background-color: var(--panel-sub);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+}
+
+/* IDE Panel Header Bar */
+.edu-panel-header {
+  background-color: var(--panel-sub);
+  border-bottom: 1px solid var(--panel-border);
+  padding: 0.625rem 1rem;
+  display: flex;
+  items-center: center;
+  justify-content: space-between;
+}
+
+/* Grid background for subtle code environment pattern */
+.bg-grid-pattern {
+  background-size: 24px 24px;
+  background-image: 
+    linear-gradient(to right, rgba(30, 38, 56, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(30, 38, 56, 0.25) 1px, transparent 1px);
+}
+
+/* Dot matrix pattern */
+.bg-dot-pattern {
+  background-image: radial-gradient(rgba(148, 163, 184, 0.15) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* =====================================================================
+   BUTTONS & CONTROLS
+   ===================================================================== */
 
 .edu-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  font-family: var(--font-mono-code);
-  font-size: 13px;
+  gap: 0.375rem;
+  font-family: var(--font-sans-ui);
+  font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.02em;
-  padding: 0.65rem 1.25rem;
-  transition: all 0.15s ease-in-out;
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-md);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  border-radius: 0px;
+  user-select: none;
+  line-height: 1.25;
 }
 
 .edu-btn-primary {
-  background-color: #8052ff;
+  background-color: var(--syntax-indigo);
   color: #ffffff;
-  border: 1px solid #8052ff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
 }
 .edu-btn-primary:hover {
-  background-color: #6c3cf0;
-  border-color: #6c3cf0;
+  background-color: #4f46e5;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.45);
   transform: translateY(-1px);
+}
+.edu-btn-primary:active {
+  transform: translateY(0);
 }
 
 .edu-btn-secondary {
-  background-color: transparent;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: var(--panel-sub);
+  color: var(--text-primary);
+  border: 1px solid var(--panel-border);
 }
 .edu-btn-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.4);
+  border-color: var(--panel-border-bright);
+  background-color: var(--panel-border);
 }
 
-.edu-btn-saffron {
-  background-color: #ffb829;
-  color: #000000;
-  border: 1px solid #ffb829;
-  font-weight: 700;
+.edu-btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
 }
-.edu-btn-saffron:hover {
-  background-color: #e5a420;
+.edu-btn-ghost:hover {
+  color: var(--text-primary);
+  background-color: var(--panel-sub);
 }
 
-.edu-btn-verdant {
-  background-color: #15846e;
+.edu-btn-emerald {
+  background-color: var(--terminal-emerald);
   color: #ffffff;
-  border: 1px solid #15846e;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
-.edu-btn-verdant:hover {
-  background-color: #116c5a;
+.edu-btn-emerald:hover {
+  background-color: #059669;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.45);
 }
+
+.edu-btn-danger {
+  background-color: var(--diagnostic-rose);
+  color: #ffffff;
+}
+.edu-btn-danger:hover {
+  background-color: #e11d48;
+}
+
+/* =====================================================================
+   INPUTS & FORM CONTROLS
+   ===================================================================== */
 
 .edu-input {
-  background-color: #000000;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  padding: 0.65rem 0.85rem;
-  outline: none;
-  transition: border-color 0.15s ease;
-  font-family: var(--font-mono-code);
+  width: 100%;
+  background-color: var(--panel-sub);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--text-primary);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 .edu-input:focus {
-  border-color: #8052ff;
+  outline: none;
+  border-color: var(--syntax-indigo);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+.edu-input::placeholder {
+  color: var(--text-muted);
 }
 
-/* Status LEDs */
+/* =====================================================================
+   BADGES, TAGS & STATUS INDICATORS
+   ===================================================================== */
+
+.edu-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--font-mono-code);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.edu-badge-indigo {
+  background: rgba(99, 102, 241, 0.12);
+  color: #818cf8;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.edu-badge-emerald {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.edu-badge-amber {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.edu-badge-rose {
+  background: rgba(244, 63, 94, 0.12);
+  color: #fb7185;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.edu-badge-cyan {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+/* Live LED Pulsing Dot */
 .status-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
   display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 9999px;
 }
 .status-led-active {
-  background-color: #15846e;
-  box-shadow: 0 0 8px rgba(21, 132, 110, 0.8);
+  background-color: var(--terminal-emerald);
+  box-shadow: 0 0 6px var(--terminal-emerald);
 }
-.status-led-iris {
-  background-color: #8052ff;
-  box-shadow: 0 0 8px rgba(128, 82, 255, 0.8);
+.status-led-warning {
+  background-color: var(--compiler-amber);
+  box-shadow: 0 0 6px var(--compiler-amber);
 }
-.status-led-saffron {
-  background-color: #ffb829;
-  box-shadow: 0 0 8px rgba(255, 184, 41, 0.8);
+.status-led-error {
+  background-color: var(--diagnostic-rose);
+  box-shadow: 0 0 6px var(--diagnostic-rose);
 }
 
-/* Subtle editorial underline hover */
-.editorial-link {
-  position: relative;
-  display: inline-block;
-  text-decoration: none;
+/* =====================================================================
+   PROSE / LESSON MARKDOWN STYLING
+   ===================================================================== */
+
+.prose h1 {
+  font-size: 1.625rem;
+  font-weight: 800;
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
 }
-.editorial-link::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  transform: scaleX(0);
-  height: 1px;
-  bottom: -2px;
-  left: 0;
-  background-color: #8052ff;
-  transform-origin: bottom right;
-  transition: transform 0.25s ease-out;
+
+.prose h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 1.125rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.015em;
 }
-.editorial-link:hover::after {
-  transform: scaleX(1);
-  transform-origin: bottom left;
+
+.prose h3 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose p {
+  margin-bottom: 0.875rem;
+  line-height: 1.65;
+  font-size: 0.875rem;
+}
+
+.prose code {
+  background: rgba(30, 38, 56, 0.6);
+  color: var(--syntax-cyan);
+  padding: 0.15rem 0.35rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono-code);
+  font-size: 0.8125rem;
+  border: 1px solid var(--panel-border);
+}
+
+.prose pre {
+  background: #07090e;
+  color: #f8fafc;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--panel-border);
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  font-family: var(--font-mono-code);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.prose pre code {
+  background: transparent;
+  padding: 0;
+  border: none;
+  color: inherit;
+}
+
+.prose ul, .prose ol {
+  margin-left: 1.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose li {
+  margin-bottom: 0.25rem;
+}
+
+/* Glassmorphism Legacy Fallback */
+.glass {
+  background: rgba(13, 17, 26, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--panel-border);
+}
+
+/* Cosmetic theme overrides support */
+.theme-cyberpunk {
+  --canvas-bg: #050811;
+  --panel-bg: #0a0e1a;
+  --panel-border: #06b6d4;
+  --syntax-indigo: #06b6d4;
+}
+
+.theme-matrix {
+  --canvas-bg: #020b04;
+  --panel-bg: #041407;
+  --panel-border: #10b981;
+  --syntax-indigo: #10b981;
+}
+
+.theme-aurora {
+  --canvas-bg: #070614;
+  --panel-bg: #0e0c24;
+  --panel-border: #8b5cf6;
+  --syntax-indigo: #8b5cf6;
 }

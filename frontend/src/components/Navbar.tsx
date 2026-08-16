@@ -2,66 +2,58 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { 
+  Zap, 
   LogOut, 
   Menu, 
   X, 
   Languages, 
   ShieldCheck, 
+  Code2, 
   Terminal,
   ShoppingBag,
-  Trophy,
-  Flame,
-  User,
-  Compass,
-  ArrowRight
+  Trophy
 } from 'lucide-react';
-import { api, User as UserType } from '@/lib/api';
+import { api, User } from '@/lib/api';
 
 const navTranslations = {
   en: {
-    brand: "EDUVERSE",
-    workspace: "WORKSPACE",
-    courses: "COURSES",
-    missions: "MISSIONS",
-    depot: "DEPOT",
-    verify: "VERIFY",
-    academy: "ACADEMY",
-    login: "SIGN IN",
-    register: "JOIN LAB",
-    logout: "DISCONNECT",
-    level: "LV",
-    xp: "XP",
-    status: "SYS ● ONLINE"
+    brand: "EduVerse",
+    home: "Start",
+    workspace: "Workspace",
+    missions: "Missions",
+    shop: "Depot",
+    verify: "Verify",
+    login: "Sign In",
+    register: "Register",
+    logout: "Disconnect",
+    level: "Lv",
+    xp: "XP"
   },
   ar: {
     brand: "إديو فيرس",
-    workspace: "المختبر",
-    courses: "المناهج",
+    home: "الرئيسية",
+    workspace: "لوحة التحكم",
     missions: "المهام",
-    depot: "المتجر",
+    shop: "المتجر",
     verify: "التحقق",
-    academy: "الأكاديمية",
     login: "تسجيل الدخول",
-    register: "انضم الآن",
+    register: "حساب جديد",
     logout: "خروج",
     level: "المستوى",
-    xp: "خبرة",
-    status: "النظام ● نشط"
+    xp: "خبرة"
   }
 };
 
 export default function Navbar() {
   const router = useRouter();
-  const pathname = usePathname();
-  const [user, setUser] = useState<UserType | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [userXp, setUserXp] = useState<number>(0);
   const [userLevel, setUserLevel] = useState<number>(1);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [lang, setLang] = useState<'en' | 'ar'>('en');
-  const [mounted, setMounted] = useState(false);
 
   const syncUserData = async () => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('eduverse_token') : null;
@@ -74,18 +66,15 @@ export default function Navbar() {
     if (token) {
       try {
         const profile = await api.getMe();
-        if (profile) {
-          setUser(profile);
-          setUserXp(profile.xp);
-          setUserLevel(profile.level);
-          if (profile.name) {
-            setUserName(profile.name);
-            localStorage.setItem('eduverse_user_name', profile.name);
-          }
+        setUser(profile);
+        setUserXp(profile.xp);
+        setUserLevel(profile.level);
+        if (profile.name) {
+          setUserName(profile.name);
+          localStorage.setItem('eduverse_user_name', profile.name);
         }
       } catch (err) {
-        localStorage.removeItem('eduverse_token');
-        setUser(null);
+        console.error('Navbar sync exception:', err);
       }
     } else {
       setUser(null);
@@ -93,7 +82,6 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    setMounted(true);
     syncUserData();
 
     const handleStorageChange = () => syncUserData();
@@ -113,232 +101,193 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem('eduverse_token');
     localStorage.removeItem('eduverse_user_name');
+    localStorage.removeItem('eduverse_user_email');
     localStorage.removeItem('eduverse_user_id');
     setUser(null);
     setUserName(null);
-    window.dispatchEvent(new Event('storage'));
     router.push('/login');
   };
 
   const toggleLanguage = () => {
-    const newLang = lang === 'en' ? 'ar' : 'en';
-    setLang(newLang);
-    localStorage.setItem('eduverse_lang', newLang);
+    const nextLang = lang === 'en' ? 'ar' : 'en';
+    setLang(nextLang);
+    localStorage.setItem('eduverse_lang', nextLang);
+    document.documentElement.dir = nextLang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = nextLang;
     window.dispatchEvent(new Event('eduverse_language_change'));
   };
 
   const t = navTranslations[lang];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-black border-b border-white/10 font-mono-code text-[14px] select-none">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 w-full border-b border-[#1e2638] bg-[#07090e]/95 backdrop-blur-md font-mono-code text-xs select-none">
+      <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
-        {/* Brand & Left Navigation */}
-        <div className="flex items-center gap-6 md:gap-8">
+        {/* Brand Terminal Node */}
+        <div className="flex items-center gap-6">
           <Link 
-            href="/" 
-            className="flex items-center gap-2 group tracking-tight"
+            href={userName ? "/dashboard" : "/"} 
+            className="flex items-center gap-2 font-bold tracking-tight text-white hover:text-indigo-400 transition-colors"
           >
-            <span className="text-white font-bold tracking-widest text-sm flex items-center gap-1.5">
-              <span className="text-[#8052ff] font-extrabold">&gt;</span>
-              <span>{t.brand}</span>
-            </span>
+            <div className="flex h-6 w-6 items-center justify-center rounded bg-indigo-600/20 border border-indigo-500/40 text-indigo-400">
+              <Terminal className="h-3.5 w-3.5" />
+            </div>
+            <span className="text-sm font-extrabold tracking-wider">{t.brand}</span>
+            <span className="text-[10px] text-slate-500 hidden sm:inline">v2.0</span>
           </Link>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-6 text-[13px] tracking-[0.35px]">
-            <Link 
-              href="/dashboard" 
-              className={`editorial-link transition-colors ${
-                pathname === '/dashboard' ? 'text-white font-bold' : 'text-[#9a9a9a] hover:text-white'
-              }`}
-            >
-              {t.workspace}
-            </Link>
-
-            <Link 
-              href="/courses" 
-              className={`editorial-link transition-colors ${
-                pathname.startsWith('/courses') ? 'text-white font-bold' : 'text-[#9a9a9a] hover:text-white'
-              }`}
-            >
-              {t.courses}
-            </Link>
-
-            <Link 
-              href="/champions" 
-              className={`editorial-link transition-colors ${
-                pathname === '/champions' ? 'text-[#ffb829] font-bold' : 'text-[#9a9a9a] hover:text-[#ffb829]'
-              }`}
-            >
-              {t.missions}
-            </Link>
-
-            <Link 
-              href="/shop" 
-              className={`editorial-link transition-colors ${
-                pathname === '/shop' ? 'text-white font-bold' : 'text-[#9a9a9a] hover:text-white'
-              }`}
-            >
-              {t.depot}
-            </Link>
-
-            <Link 
-              href="/verify" 
-              className={`editorial-link transition-colors ${
-                pathname.startsWith('/verify') ? 'text-[#15846e] font-bold' : 'text-[#9a9a9a] hover:text-[#15846e]'
-              }`}
-            >
-              {t.verify}
-            </Link>
-          </nav>
+          {/* System Status Indicator */}
+          <div className="hidden lg:flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#0d111a] border border-[#1e2638] text-[10px] text-slate-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>SYS: ONLINE</span>
+          </div>
         </div>
 
-        {/* Right Status Ribbon & Auth */}
-        <div className="hidden md:flex items-center gap-4 text-xs">
+        {/* Monospace Quick Links */}
+        <nav className="hidden md:flex items-center gap-5 font-mono-code text-xs text-slate-300">
+          <Link 
+            href={userName ? "/dashboard" : "/"} 
+            className="hover:text-indigo-400 transition-colors flex items-center gap-1.5"
+          >
+            <Code2 className="h-3.5 w-3.5 text-slate-500" />
+            <span>{userName ? t.workspace : t.home}</span>
+          </Link>
+
+          <Link 
+            href="/champions" 
+            className="hover:text-amber-400 transition-colors flex items-center gap-1.5"
+          >
+            <Trophy className="h-3.5 w-3.5 text-slate-500" />
+            <span>{t.missions}</span>
+          </Link>
+
+          <Link 
+            href="/shop" 
+            className="hover:text-cyan-400 transition-colors flex items-center gap-1.5"
+          >
+            <ShoppingBag className="h-3.5 w-3.5 text-slate-500" />
+            <span>{t.shop}</span>
+          </Link>
+
+          <Link 
+            href="/verify" 
+            className="hover:text-emerald-400 transition-colors flex items-center gap-1.5"
+          >
+            <ShieldCheck className="h-3.5 w-3.5 text-slate-500" />
+            <span>{t.verify}</span>
+          </Link>
+        </nav>
+
+        {/* Action Controls & Telemetry */}
+        <div className="flex items-center gap-3">
           
-          {/* Telemetry Status Indicator */}
-          <div className="flex items-center gap-2 px-2.5 py-1 rounded-none border border-white/10 bg-black text-[#9a9a9a]">
-            <span className="status-led status-led-active"></span>
-            <span className="text-[11px] font-bold tracking-wider text-white uppercase">{t.status}</span>
-          </div>
-
-          {/* User Telemetry Pill */}
-          {mounted && userName && (
-            <div className="flex items-center gap-3 px-3 py-1 border border-white/10 bg-black text-white">
-              <span className="text-[#8052ff] font-bold">{t.level} {userLevel < 10 ? `0${userLevel}` : userLevel}</span>
-              <span className="text-white/20">|</span>
-              <span className="text-[#ffb829] font-bold">{userXp} {t.xp}</span>
-            </div>
-          )}
-
-          {/* Language Toggle with hydration guard */}
           <button
             onClick={toggleLanguage}
-            suppressHydrationWarning
-            className="p-1.5 border border-white/10 bg-black text-[#9a9a9a] hover:text-white hover:border-white/30 transition-colors uppercase text-[11px] font-bold px-2.5 cursor-pointer"
-            title="Switch Language"
+            className="flex items-center gap-1 px-2 py-1 rounded bg-[#0d111a] border border-[#1e2638] text-[10px] font-bold text-slate-400 hover:text-white hover:border-slate-600 transition-colors"
+            title="Toggle Interface Language"
           >
-            {mounted ? (lang === 'en' ? 'AR' : 'EN') : 'AR'}
+            <Languages className="h-3 w-3" />
+            <span>{lang.toUpperCase()}</span>
           </button>
 
-          {/* Auth Button */}
-          {mounted && userName ? (
-            <div className="flex items-center gap-2">
-              <Link
-                href="/profile/me"
-                className="text-white hover:text-[#8052ff] transition-colors flex items-center gap-1.5 font-bold"
-              >
-                <span>{userName}</span>
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="p-1 text-[#9a9a9a] hover:text-rose-400 transition-colors cursor-pointer"
-                title={t.logout}
-              >
-                <LogOut className="h-3.5 w-3.5" />
-              </button>
+          {userName ? (
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:flex items-center gap-2 bg-[#0d111a] border border-[#1e2638] px-2.5 py-1 rounded text-[10px]">
+                <span className="text-slate-400">{t.level} {userLevel}</span>
+                <span className="h-3 w-px bg-[#1e2638]"></span>
+                <span className="text-indigo-400 font-bold flex items-center gap-1">
+                  <Zap className="h-3 w-3 text-amber-400 fill-amber-400" />
+                  {userXp} {t.xp}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/dashboard"
+                  className="px-2.5 py-1 rounded bg-indigo-600/15 border border-indigo-500/30 text-indigo-300 font-bold text-xs hover:bg-indigo-600/25 transition-colors"
+                >
+                  {userName}
+                </Link>
+
+                <button
+                  onClick={handleLogout}
+                  className="p-1 rounded text-slate-400 hover:text-rose-400 transition-colors"
+                  title={t.logout}
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                </button>
+              </div>
             </div>
           ) : (
-            <div className="flex items-center gap-2">
-              <Link
-                href="/login"
-                className="text-[#9a9a9a] hover:text-white px-2 py-1 transition-colors text-xs"
+            <div className="flex items-center gap-2 font-mono-code">
+              <Link 
+                href="/login" 
+                className="edu-btn edu-btn-secondary py-1 px-3 text-xs"
               >
                 {t.login}
               </Link>
-              <Link
-                href="/register"
-                className="edu-btn edu-btn-primary text-xs py-1 px-3"
+              <Link 
+                href="/register" 
+                className="edu-btn edu-btn-primary py-1 px-3 text-xs font-bold"
               >
-                <span>{t.register}</span>
-                <ArrowRight className="h-3 w-3" />
+                {t.register}
               </Link>
             </div>
           )}
-        </div>
 
-        {/* Mobile Hamburger Toggle */}
-        <div className="flex md:hidden items-center gap-2">
-          <button
-            onClick={toggleLanguage}
-            suppressHydrationWarning
-            className="p-1 border border-white/10 bg-black text-white text-[11px] font-bold px-2"
-          >
-            {mounted ? (lang === 'en' ? 'AR' : 'EN') : 'AR'}
-          </button>
-          
+          {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 border border-white/10 text-white cursor-pointer"
+            className="md:hidden p-1.5 rounded bg-[#0d111a] border border-[#1e2638] text-slate-300"
           >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
-        </div>
 
+        </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-white/10 bg-black p-4 space-y-4 font-mono-code text-xs">
-          <nav className="flex flex-col space-y-3">
-            <Link 
-              href="/dashboard" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-[#9a9a9a] hover:text-white py-1"
-            >
-              {t.workspace}
-            </Link>
-            <Link 
-              href="/courses" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-[#9a9a9a] hover:text-white py-1"
-            >
-              {t.courses}
-            </Link>
-            <Link 
-              href="/champions" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-[#ffb829] hover:text-white py-1"
-            >
-              {t.missions}
-            </Link>
-            <Link 
-              href="/shop" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-[#9a9a9a] hover:text-white py-1"
-            >
-              {t.depot}
-            </Link>
-            <Link 
-              href="/verify" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-[#15846e] hover:text-white py-1"
-            >
-              {t.verify}
-            </Link>
-          </nav>
-
-          <div className="border-t border-white/10 pt-3 flex flex-col gap-2">
-            {mounted && userName ? (
-              <div className="flex items-center justify-between">
-                <span className="text-white font-bold">{userName}</span>
-                <button onClick={handleLogout} className="text-rose-400 text-xs">{t.logout}</button>
-              </div>
-            ) : (
-              <div className="flex gap-2">
-                <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="edu-btn edu-btn-secondary flex-1 text-center py-2">
-                  {t.login}
-                </Link>
-                <Link href="/register" onClick={() => setMobileMenuOpen(false)} className="edu-btn edu-btn-primary flex-1 text-center py-2">
-                  {t.register}
-                </Link>
-              </div>
-            )}
-          </div>
+        <div className="md:hidden border-t border-[#1e2638] bg-[#0d111a] p-4 flex flex-col gap-3 font-mono-code text-xs">
+          <Link 
+            href={userName ? "/dashboard" : "/"}
+            onClick={() => setMobileMenuOpen(false)}
+            className="py-2 text-slate-200 hover:text-indigo-400"
+          >
+            {"> "} {userName ? t.workspace : t.home}
+          </Link>
+          <Link 
+            href="/champions" 
+            onClick={() => setMobileMenuOpen(false)}
+            className="py-2 text-slate-200 hover:text-amber-400"
+          >
+            {"> "} {t.missions}
+          </Link>
+          <Link 
+            href="/shop" 
+            onClick={() => setMobileMenuOpen(false)}
+            className="py-2 text-slate-200 hover:text-cyan-400"
+          >
+            {"> "} {t.shop}
+          </Link>
+          <Link 
+            href="/verify" 
+            onClick={() => setMobileMenuOpen(false)}
+            className="py-2 text-slate-200 hover:text-emerald-400"
+          >
+            {"> "} {t.verify}
+          </Link>
+          
+          {userName && (
+            <div className="pt-2 border-t border-[#1e2638] flex items-center justify-between">
+              <span className="text-slate-300 font-bold">{userName}</span>
+              <button onClick={handleLogout} className="text-rose-400 font-bold">
+                {t.logout}
+              </button>
+            </div>
+          )}
         </div>
       )}
-
     </header>
   );
 }
