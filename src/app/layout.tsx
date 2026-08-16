@@ -13,8 +13,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EduVerse - Learn Programming with your 24/7 AI Tutor",
-  description: "Master Python, C++, HTML, CSS, and JavaScript with interactive structured courses, live practice sandbox, auto-graded exams, and verified certificates. 100% Free.",
+  title: "EduVerse - Experimental Developer Learning Laboratory",
+  description: "An interactive coding laboratory where students learn programming by breaking, debugging, and understanding code. Python, C++, Web, and AST debugging.",
 };
 
 export default function RootLayout({
@@ -34,13 +34,6 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var savedTheme = localStorage.getItem('theme');
-                  if (savedTheme === 'light') {
-                    document.documentElement.classList.remove('dark');
-                  } else {
-                    document.documentElement.classList.add('dark');
-                  }
-                  
                   var savedLang = localStorage.getItem('eduverse_lang');
                   if (savedLang === 'ar') {
                     document.documentElement.dir = 'rtl';
@@ -55,7 +48,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body suppressHydrationWarning className="min-h-full flex flex-col bg-black text-white">
+        {children}
+      </body>
     </html>
   );
 }

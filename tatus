@@ -1,0 +1,10 @@
+* [33m63e3031[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Revise README for better organization and details
+* [33mc09c8c9[m feat: add Replit AI Academy and certificate verification system
+* [33m5945aea[m Trigger Vercel production build
+* [33m621bd06[m Fix syntax error in src/lib/api.ts by removing orphan comment lines and git merge markers
+*   [33mc40d471[m Merge resolved and synced auth fixes
+[32m|[m[33m\[m  
+[32m|[m *   [33m87f5d27[m Merge branch 'main' of https://github.com/beshoy2011/eduverse-frontend
+[32m|[m [34m|[m[35m\[m  
+[32m|[m * [35m|[m [33m2ee1baf[m Update BACKEND_URL fallback to Railway backend production URL and fix frontend configuration
+[32m|[m * [35m|[m [33meddee1d[m Update frontend code for production readiness

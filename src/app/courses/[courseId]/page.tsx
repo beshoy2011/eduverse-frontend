@@ -457,9 +457,7 @@ export default function CoursePage() {
   const localCourse = translateCourseDetail(course, lang);
 
   return (
-    <div className={`flex flex-col min-h-screen transition-all duration-500 pb-12 ${
-      course.theme_style ? `theme-${course.theme_style} dark` : 'bg-slate-50 dark:bg-slate-950'
-    }`}>
+    <div className="flex flex-col min-h-screen bg-[#050609] text-slate-100 font-sans select-none pb-12">
       <Navbar />
 
       <motion.main 
@@ -485,12 +483,12 @@ export default function CoursePage() {
           className={lang === 'ar' ? 'text-right' : 'text-left'}
         >
           <Link 
-            href="/dashboard" 
-            className={`inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-850 dark:text-slate-400 dark:hover:text-white transition-colors ${
+            href="/courses" 
+            className={`inline-flex items-center gap-1.5 text-xs font-mono-code font-bold text-slate-400 hover:text-white transition-colors ${
               lang === 'ar' ? 'flex-row-reverse' : ''
             }`}
           >
-            <ArrowLeft className={`h-4.5 w-4.5 ${lang === 'ar' ? 'rotate-180' : ''}`} /> {t.back}
+            <ArrowLeft className={`h-4 w-4 ${lang === 'ar' ? 'rotate-180' : ''}`} /> {t.back}
           </Link>
         </motion.div>
 
@@ -500,85 +498,85 @@ export default function CoursePage() {
             hidden: { opacity: 0, y: 15 },
             visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
           }}
-          className={`rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 md:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-8 transition-all card-lobby ${
+          className={`rounded-md border border-[#1a2233] bg-[#080a0f] p-6 md:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-8 transition-all font-mono-code ${
             lang === 'ar' ? 'flex-row-reverse text-right font-sans' : 'text-left'
           }`}
         >
           <div className="space-y-4 max-w-xl flex-1">
             <div className={`flex items-center gap-2 ${lang === 'ar' ? 'flex-row-reverse' : ''}`}>
-              <span className="rounded bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200/50 dark:border-indigo-800/40 py-1 px-2.5 text-xs font-bold text-indigo-650 dark:text-indigo-400 shadow-sm">
+              <span className="rounded bg-indigo-500/10 border border-indigo-500/30 py-1 px-2.5 text-xs font-bold text-indigo-400">
                 {localCourse.difficulty}
               </span>
-              <span className={`inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 ${
+              <span className={`inline-flex items-center gap-1 text-xs text-slate-400 ${
                 lang === 'ar' ? 'flex-row-reverse' : ''
               }`}>
-                <Clock className="h-3.5 w-3.5" /> {localCourse.duration}
+                <Clock className="h-3.5 w-3.5 text-slate-500" /> {localCourse.duration}
               </span>
             </div>
             
-            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white neon-text">{localCourse.title}</h2>
-            <p className="text-sm text-slate-655 dark:text-slate-300 leading-relaxed">{localCourse.description}</p>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-white font-sans">{localCourse.title}</h1>
+            <p className="text-xs text-slate-300 font-sans leading-relaxed">{localCourse.description}</p>
             
             {/* Skills grid */}
             <div className={`flex flex-wrap gap-2 pt-2 ${lang === 'ar' ? 'flex-row-reverse' : ''}`}>
               {localCourse.skills.split(',').map((skill, index) => (
-                <span key={index} className="rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-xs font-semibold text-slate-655 dark:text-slate-400 border border-slate-200/50 dark:border-slate-800/40">
+                <span key={index} className="rounded bg-[#0d1117] px-2.5 py-1 text-[11px] font-semibold text-slate-400 border border-[#1a2233]">
                   {skill}
                 </span>
               ))}
             </div>
 
-            <div className="pt-4">
+            <div className="pt-4 font-mono-code">
               {isEnrolled ? (
                 <Link
                   href={`/courses/${courseId}/lessons/${course.lessons[0]?.id || 1}`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-4 text-base font-bold text-white shadow-lg shadow-indigo-600/25 hover:bg-indigo-500 hover:scale-[1.02] transition-all cursor-pointer"
+                  className="edu-btn edu-btn-primary px-6 py-3 text-xs font-bold"
                 >
-                  {t.resume}
-                  <Play className={`h-5 w-5 fill-current ${lang === 'ar' ? 'rotate-180' : ''}`} />
+                  <span>{t.resume}</span>
+                  <Play className={`h-4 w-4 fill-current ${lang === 'ar' ? 'rotate-180' : ''}`} />
                 </Link>
               ) : (
                 <button
                   onClick={handleEnroll}
                   disabled={enrolling}
-                  className="inline-flex justify-center items-center gap-2 rounded-xl bg-indigo-600 px-6 py-4 text-base font-bold text-white shadow-lg shadow-indigo-600/25 hover:bg-indigo-500 hover:scale-[1.02] transition-all cursor-pointer"
+                  className="edu-btn edu-btn-primary px-6 py-3 text-xs font-bold"
                 >
-                  {enrolling ? t.enrolling : t.enroll}
-                  <GraduationCap className="h-5.5 w-5.5" />
+                  <span>{enrolling ? t.enrolling : t.enroll}</span>
+                  <GraduationCap className="h-4 w-4" />
                 </button>
               )}
-              <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2">{t.badgeInfo}</p>
+              <p className="text-[10px] text-slate-500 mt-2 font-mono-code">{t.badgeInfo}</p>
             </div>
           </div>
 
-          <div className="w-full md:w-72 shrink-0 flex flex-col gap-4">
+          <div className="w-full md:w-72 shrink-0 flex flex-col gap-4 font-mono-code">
             {renderThemePreview(course.theme_style)}
 
-            {/* Quick Trailer / Metadata Card */}
-            <div className="bg-slate-55/80 dark:bg-slate-950/80 p-4 rounded-xl border border-slate-200/50 dark:border-slate-800/60 text-xs space-y-2.5 shadow-inner">
-              <div className={`flex justify-between items-center text-[9px] font-black uppercase text-slate-450 tracking-wider ${
+            {/* Quick Parameters Card */}
+            <div className="bg-[#0d1117] p-4 rounded border border-[#1a2233] text-xs space-y-2.5">
+              <div className={`flex justify-between items-center text-[10px] font-bold uppercase text-slate-400 tracking-wider ${
                 lang === 'ar' ? 'flex-row-reverse' : ''
               }`}>
-                <span>{lang === 'ar' ? 'معايير الدورة' : 'Pathway Parameters'}</span>
-                <span className="text-indigo-600 dark:text-indigo-400 font-bold">100% Free</span>
+                <span>{lang === 'ar' ? 'معايير الدورة' : 'PATHWAY PARAMETERS'}</span>
+                <span className="text-emerald-400 font-bold">100% Free</span>
               </div>
-              <div className={`flex justify-between text-slate-655 dark:text-slate-300 ${
+              <div className={`flex justify-between text-slate-300 ${
                 lang === 'ar' ? 'flex-row-reverse' : ''
               }`}>
-                <span>{lang === 'ar' ? 'المجموعات البرمجية' : 'Syllabus Chapters'}</span>
-                <span className="font-extrabold text-slate-900 dark:text-white">{course.lessons.length} Lessons</span>
+                <span className="text-slate-500">{lang === 'ar' ? 'المجموعات البرمجية' : 'Syllabus Chapters'}</span>
+                <span className="font-bold text-white">{course.lessons.length} Lessons</span>
               </div>
-              <div className={`flex justify-between text-slate-655 dark:text-slate-300 ${
+              <div className={`flex justify-between text-slate-300 ${
                 lang === 'ar' ? 'flex-row-reverse' : ''
               }`}>
-                <span>{lang === 'ar' ? 'مستوى التحدي' : 'Lobby Difficulty'}</span>
-                <span className="font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">{course.difficulty}</span>
+                <span className="text-slate-500">{lang === 'ar' ? 'مستوى التحدي' : 'Track Difficulty'}</span>
+                <span className="font-bold text-indigo-400 uppercase tracking-wider">{course.difficulty}</span>
               </div>
-              <div className={`flex justify-between text-slate-655 dark:text-slate-300 ${
+              <div className={`flex justify-between text-slate-300 ${
                 lang === 'ar' ? 'flex-row-reverse' : ''
               }`}>
-                <span>{lang === 'ar' ? 'الشهادة الممنوحة' : 'Certificate Verification'}</span>
-                <span className="font-extrabold text-emerald-500">ACTIVE ✔</span>
+                <span className="text-slate-500">{lang === 'ar' ? 'الشهادة الممنوحة' : 'Verified Signature'}</span>
+                <span className="font-bold text-emerald-400">ACTIVE ✔</span>
               </div>
             </div>
           </div>
@@ -590,29 +588,30 @@ export default function CoursePage() {
             hidden: { opacity: 0, y: 15 },
             visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
           }}
-          className="space-y-4"
+          className="space-y-4 font-mono-code"
         >
-          <h3 className={`text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 ${
+          <h2 className={`text-base font-bold text-white flex items-center gap-2 ${
             lang === 'ar' ? 'flex-row-reverse text-right' : ''
           }`}>
-            <BookOpen className="h-5 w-5 text-indigo-500" /> {t.roadmapTitle}
-          </h3>
+            <BookOpen className="h-4 w-4 text-indigo-400" /> {t.roadmapTitle}
+          </h2>
 
-          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden divide-y divide-slate-100 dark:divide-slate-800 transition-colors">
+          <div className="rounded-md border border-[#1a2233] bg-[#080a0f] overflow-hidden divide-y divide-[#1a2233] transition-colors">
             {localCourse.lessons.map((lesson, idx) => (
-              <div 
+              <Link 
+                href={`/courses/${courseId}/lessons/${lesson.id}`}
                 key={lesson.id} 
-                className={`p-5 flex items-center justify-between hover:bg-slate-50/50 dark:hover:bg-slate-900/40 transition-colors ${
+                className={`p-4 flex items-center justify-between hover:bg-[#0d1117] transition-colors ${
                   lang === 'ar' ? 'flex-row-reverse' : ''
                 }`}
               >
                 <div className={`flex items-center gap-4 ${lang === 'ar' ? 'flex-row-reverse text-right' : ''}`}>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-500 dark:text-slate-400">
-                    {idx + 1}
+                  <div className="flex h-7 w-7 items-center justify-center rounded bg-[#0d1117] border border-[#1a2233] text-xs font-bold text-slate-400">
+                    {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">{lesson.title}</h4>
-                    <p className="text-[10px] text-slate-400 mt-0.5">
+                    <h3 className="text-xs font-bold text-slate-200 font-sans">{lesson.title}</h3>
+                    <p className="text-[10px] text-slate-500 mt-0.5">
                       {t.lessonLabel
                         .replace("{current}", (idx + 1).toString())
                         .replace("{total}", localCourse.lessons.length.toString())}
@@ -620,26 +619,29 @@ export default function CoursePage() {
                   </div>
                 </div>
 
-                <ChevronRight className={`h-4.5 w-4.5 text-slate-400 ${lang === 'ar' ? 'rotate-180' : ''}`} />
-              </div>
+                <ChevronRight className={`h-4 w-4 text-slate-500 ${lang === 'ar' ? 'rotate-180' : ''}`} />
+              </Link>
             ))}
 
             {/* Final Exam Roadmap node */}
-            <div className={`p-5 flex items-center justify-between bg-slate-50/30 dark:bg-slate-950/20 ${
-              lang === 'ar' ? 'flex-row-reverse' : ''
-            }`}>
+            <Link 
+              href={`/exam/${courseId}`}
+              className={`p-4 flex items-center justify-between bg-[#0d1117]/60 hover:bg-[#0d1117] transition-colors ${
+                lang === 'ar' ? 'flex-row-reverse' : ''
+              }`}
+            >
               <div className={`flex items-center gap-4 ${lang === 'ar' ? 'flex-row-reverse text-right' : ''}`}>
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400">
-                  <Award className="h-4.5 w-4.5" />
+                <div className="flex h-7 w-7 items-center justify-center rounded bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
+                  <Award className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-indigo-600 dark:text-indigo-400">{t.finalExam}</h4>
-                  <p className="text-[10px] text-slate-400 mt-0.5">{t.finalExamDesc}</p>
+                  <h3 className="text-xs font-bold text-indigo-400 font-sans">{t.finalExam}</h3>
+                  <p className="text-[10px] text-slate-500 mt-0.5">{t.finalExamDesc}</p>
                 </div>
               </div>
               
-              <ChevronRight className={`h-4.5 w-4.5 text-indigo-400 ${lang === 'ar' ? 'rotate-180' : ''}`} />
-            </div>
+              <ChevronRight className={`h-4 w-4 text-indigo-400 ${lang === 'ar' ? 'rotate-180' : ''}`} />
+            </Link>
           </div>
         </motion.div>
 
@@ -649,14 +651,14 @@ export default function CoursePage() {
             hidden: { opacity: 0, y: 15 },
             visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
           }}
-          className={`rounded-xl border border-amber-500/20 bg-amber-500/5 p-5 flex gap-4 items-start ${
+          className={`rounded-md border border-emerald-500/20 bg-emerald-500/5 p-5 flex gap-4 items-start font-mono-code ${
             lang === 'ar' ? 'flex-row-reverse text-right' : 'text-left'
           }`}
         >
-          <ShieldCheck className="h-6 w-6 text-amber-500 shrink-0 mt-0.5" />
-          <div>
-            <h4 className="text-sm font-bold text-slate-900 dark:text-white">{t.certTitle}</h4>
-            <p className="text-xs text-slate-605 dark:text-slate-400 mt-1 leading-relaxed">
+          <ShieldCheck className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
+          <div className="text-xs">
+            <h3 className="font-bold text-white font-sans">{t.certTitle}</h3>
+            <p className="text-slate-400 mt-1 leading-relaxed font-sans">
               {t.certDesc}
             </p>
           </div>
@@ -664,7 +666,7 @@ export default function CoursePage() {
 
       </motion.main>
 
-      {/* Persistent Donation widget placed on bottom left */}
+      {/* Persistent Donation widget */}
       <DonationWidget />
     </div>
   );

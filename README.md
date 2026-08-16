@@ -18,7 +18,7 @@ EduVerse is designed around the actual engineering loop:
 LEARN → WRITE → RUN → BREAK → DEBUG → UNDERSTAND
 ```
 
-1. **LEARN**: Core concepts explained with real-world developer analogies.
+1. **LEARN**: Core concepts explained with real-world developer analogies (Variables = Labeled storage boxes, Loops = Chef recipe iterations, Pointers = RAM street addresses).
 2. **WRITE**: Browser-native coding without complex local tooling setups.
 3. **RUN**: Instant execution in Python 3.12, C++20 GCC, and Web runtimes.
 4. **BREAK**: Intentional edge cases and boundary stress tests.
@@ -31,10 +31,23 @@ LEARN → WRITE → RUN → BREAK → DEBUG → UNDERSTAND
 
 - **💻 Interactive Pair-Debugging Workbench**: Write, run, and inspect Python and C++ directly in the browser with line-by-line error markers.
 - **🔍 Context Diagnostic Copilot**: AST-aware mentor that identifies *WHERE* and *WHY* errors occur and prompts hypotheses instead of spoon-feeding answers.
-- **🎯 Incident Response Missions**: Tackle real engineering challenge quests (e.g. *The Empty List Crash*, *Rogue Off-by-One Iteration*).
+- **🎯 Incident Response Missions**: Tackle real engineering challenge quests (e.g. *Incident #014: The Empty List Crash*, *Incident #027: Rogue Off-by-One Loop*).
 - **📜 Cryptographic Certificate Studio**: Complete a course syllabus and pass the final exam to issue an auditable certificate with verifiable SHA signatures.
 - **📊 Developer Telemetry & Study Planner**: Track your active coding streaks, mastery matrix, and milestone progress.
 - **🛒 Virtual Coder Depot**: Earn XP by resolving bugs and unlock IDE visual themes, holographic avatar frames, and streak freeze utilities.
+
+---
+
+## 🤖 AI Usage & Engineering Transparency
+
+In the spirit of honest developer transparency, here is a clear breakdown of where AI was utilized and where human engineering took charge:
+
+- **Human Architecture & Design Decisions**:
+  - **Visual & Interaction Design**: The obsidian dark editorial theme (`#050609`, `#080a0f`, `#0d1117`, `#1a2233`), custom typography hierarchies, status LEDs, telemetry ribbons, and responsive mobile drawers were uniquely crafted for EduVerse.
+  - **Pedagogical Model**: The 6-step loop (`LEARN → WRITE → RUN → BREAK → DEBUG → UNDERSTAND`) and the signature *Incident Sandbox* concept were designed to eliminate video lecture passivity.
+  - **Cryptographic Certificate Ledger**: The SHA-256 verification workflow, printable PDF generation, and public token audit system were designed and built to guarantee verifiable credentials.
+- **AI Assistance**:
+  - AI tools were used to accelerate boilerplate scaffolding, assist in debugging edge-case TypeScript compiler warnings, and generate initial lesson mockup data sets. All design systems, routing structures, and runtime mechanics were customized and verified by human hands.
 
 ---
 

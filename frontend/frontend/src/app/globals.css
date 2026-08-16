@@ -1,0 +1,433 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* =====================================================================
+   EDUVERSE DEVELOPER-NATIVE DESIGN LANGUAGE SYSTEM
+   ===================================================================== */
+
+@layer base {
+  :root {
+    --font-mono-code: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+    --font-sans-ui: 'Inter', system-ui, -apple-system, sans-serif;
+
+    /* Light Theme (Clean Developer Slate) */
+    --canvas-bg: #f8fafc;
+    --panel-bg: #ffffff;
+    --panel-sub: #f1f5f9;
+    --panel-border: #e2e8f0;
+    --panel-border-bright: #cbd5e1;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    
+    --syntax-indigo: #4f46e5;
+    --syntax-cyan: #0284c7;
+    --terminal-emerald: #059669;
+    --diagnostic-rose: #e11d48;
+    --compiler-amber: #d97706;
+    
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+
+    /* Legacy compatibility mappings */
+    --background: var(--canvas-bg);
+    --foreground: var(--text-primary);
+    --card: var(--panel-bg);
+    --card-foreground: var(--text-primary);
+    --primary: var(--syntax-indigo);
+    --border: var(--panel-border);
+    --radius: 0.375rem;
+  }
+
+  .dark {
+    /* Obsidian Dark Workspace (Primary EduVerse Aesthetic) */
+    --canvas-bg: #07090e;
+    --panel-bg: #0d111a;
+    --panel-sub: #121824;
+    --panel-border: #1e2638;
+    --panel-border-bright: #2d3852;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    
+    --syntax-indigo: #6366f1;
+    --syntax-cyan: #38bdf8;
+    --terminal-emerald: #10b981;
+    --diagnostic-rose: #f43f5e;
+    --compiler-amber: #f59e0b;
+
+    /* Legacy compatibility mappings */
+    --background: var(--canvas-bg);
+    --foreground: var(--text-primary);
+    --card: var(--panel-bg);
+    --card-foreground: var(--text-primary);
+    --primary: var(--syntax-indigo);
+    --border: var(--panel-border);
+  }
+
+  body {
+    background-color: var(--canvas-bg);
+    color: var(--text-primary);
+    font-family: var(--font-sans-ui);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    overflow-x: hidden;
+    letter-spacing: -0.011em;
+  }
+
+  /* Monospace typography helpers */
+  code, pre, kbd, samp, .font-mono-code {
+    font-family: var(--font-mono-code) !important;
+  }
+}
+
+/* Custom Minimalist IDE Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 3px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(30, 38, 56, 0.8);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.4);
+}
+
+/* Custom Scrollbar-None Utility */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* =====================================================================
+   SURFACE HIERARCHY & IDE PANELS
+   ===================================================================== */
+
+/* Core Flat IDE Panel */
+.edu-panel {
+  background-color: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.edu-panel-hover:hover {
+  border-color: var(--panel-border-bright);
+  box-shadow: 0 6px 24px -4px rgba(0, 0, 0, 0.35);
+}
+
+.edu-panel-sub {
+  background-color: var(--panel-sub);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+}
+
+/* IDE Panel Header Bar */
+.edu-panel-header {
+  background-color: var(--panel-sub);
+  border-bottom: 1px solid var(--panel-border);
+  padding: 0.625rem 1rem;
+  display: flex;
+  items-center: center;
+  justify-content: space-between;
+}
+
+/* Grid background for subtle code environment pattern */
+.bg-grid-pattern {
+  background-size: 24px 24px;
+  background-image: 
+    linear-gradient(to right, rgba(30, 38, 56, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(30, 38, 56, 0.25) 1px, transparent 1px);
+}
+
+/* Dot matrix pattern */
+.bg-dot-pattern {
+  background-image: radial-gradient(rgba(148, 163, 184, 0.15) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* =====================================================================
+   BUTTONS & CONTROLS
+   ===================================================================== */
+
+.edu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  font-family: var(--font-sans-ui);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-md);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  user-select: none;
+  line-height: 1.25;
+}
+
+.edu-btn-primary {
+  background-color: var(--syntax-indigo);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+.edu-btn-primary:hover {
+  background-color: #4f46e5;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.45);
+  transform: translateY(-1px);
+}
+.edu-btn-primary:active {
+  transform: translateY(0);
+}
+
+.edu-btn-secondary {
+  background-color: var(--panel-sub);
+  color: var(--text-primary);
+  border: 1px solid var(--panel-border);
+}
+.edu-btn-secondary:hover {
+  border-color: var(--panel-border-bright);
+  background-color: var(--panel-border);
+}
+
+.edu-btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+}
+.edu-btn-ghost:hover {
+  color: var(--text-primary);
+  background-color: var(--panel-sub);
+}
+
+.edu-btn-emerald {
+  background-color: var(--terminal-emerald);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+.edu-btn-emerald:hover {
+  background-color: #059669;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.45);
+}
+
+.edu-btn-danger {
+  background-color: var(--diagnostic-rose);
+  color: #ffffff;
+}
+.edu-btn-danger:hover {
+  background-color: #e11d48;
+}
+
+/* =====================================================================
+   INPUTS & FORM CONTROLS
+   ===================================================================== */
+
+.edu-input {
+  width: 100%;
+  background-color: var(--panel-sub);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--text-primary);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.edu-input:focus {
+  outline: none;
+  border-color: var(--syntax-indigo);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+.edu-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* =====================================================================
+   BADGES, TAGS & STATUS INDICATORS
+   ===================================================================== */
+
+.edu-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--font-mono-code);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.edu-badge-indigo {
+  background: rgba(99, 102, 241, 0.12);
+  color: #818cf8;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.edu-badge-emerald {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.edu-badge-amber {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.edu-badge-rose {
+  background: rgba(244, 63, 94, 0.12);
+  color: #fb7185;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.edu-badge-cyan {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+/* Live LED Pulsing Dot */
+.status-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.status-led-active {
+  background-color: var(--terminal-emerald);
+  box-shadow: 0 0 6px var(--terminal-emerald);
+}
+.status-led-warning {
+  background-color: var(--compiler-amber);
+  box-shadow: 0 0 6px var(--compiler-amber);
+}
+.status-led-error {
+  background-color: var(--diagnostic-rose);
+  box-shadow: 0 0 6px var(--diagnostic-rose);
+}
+
+/* =====================================================================
+   PROSE / LESSON MARKDOWN STYLING
+   ===================================================================== */
+
+.prose h1 {
+  font-size: 1.625rem;
+  font-weight: 800;
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.prose h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 1.125rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.015em;
+}
+
+.prose h3 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose p {
+  margin-bottom: 0.875rem;
+  line-height: 1.65;
+  font-size: 0.875rem;
+}
+
+.prose code {
+  background: rgba(30, 38, 56, 0.6);
+  color: var(--syntax-cyan);
+  padding: 0.15rem 0.35rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono-code);
+  font-size: 0.8125rem;
+  border: 1px solid var(--panel-border);
+}
+
+.prose pre {
+  background: #07090e;
+  color: #f8fafc;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--panel-border);
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  font-family: var(--font-mono-code);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.prose pre code {
+  background: transparent;
+  padding: 0;
+  border: none;
+  color: inherit;
+}
+
+.prose ul, .prose ol {
+  margin-left: 1.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose li {
+  margin-bottom: 0.25rem;
+}
+
+/* Glassmorphism Legacy Fallback */
+.glass {
+  background: rgba(13, 17, 26, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--panel-border);
+}
+
+/* Cosmetic theme overrides support */
+.theme-cyberpunk {
+  --canvas-bg: #050811;
+  --panel-bg: #0a0e1a;
+  --panel-border: #06b6d4;
+  --syntax-indigo: #06b6d4;
+}
+
+.theme-matrix {
+  --canvas-bg: #020b04;
+  --panel-bg: #041407;
+  --panel-border: #10b981;
+  --syntax-indigo: #10b981;
+}
+
+.theme-aurora {
+  --canvas-bg: #070614;
+  --panel-bg: #0e0c24;
+  --panel-border: #8b5cf6;
+  --syntax-indigo: #8b5cf6;
+}
